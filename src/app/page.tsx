@@ -1,10 +1,10 @@
 import EventTile from "@/components/EventTile";
 import MayorTile from "@/components/MayorTile";
-import SearchBar from "@/components/SearchBar";
+import Searchbar from "@/components/Searchbar";
 export default function Home() {
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 flex flex-col gap-12">
-      <SearchBar />
+      <Searchbar />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <MayorTile />
