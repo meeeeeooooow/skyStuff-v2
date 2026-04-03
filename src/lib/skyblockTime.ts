@@ -18,18 +18,20 @@ export const getSkyblockTime = (realTimeMs: number = Date.now()) => {
 };
 
 export const getElectionTimestamps = (targetYear: number) => {
-  const boothCloseTime = (targetYear - 1) * YEAR_MS + EPOCH;
+  const boothCloseTime = (targetYear - 1) * YEAR_MS + EPOCH + (2 * MONTH_MS) + (26 * DAY_MS);
   const boothOpenTime = (targetYear - 2) * YEAR_MS + EPOCH + (5 * MONTH_MS) + (26 * DAY_MS);
   return { boothOpenTime, boothCloseTime };
 };
 
 export const formatTimeRemaining = (targetTimestamp: number) => {
   const remainingMs = targetTimestamp - Date.now();
-  if (remainingMs <= 0) return "0d 0h";
+  if (remainingMs <= 0) return { days: "0", hours: "00", minutes: "00", seconds: "00" };
 
   const totalHours = Math.floor(remainingMs / (1000 * 60 * 60));
-  const days = Math.floor(totalHours / 24);
-  const hours = totalHours % 24;
+  const days = Math.floor(totalHours / 24).toString();
+  const hours = (totalHours % 24).toString().padStart(2, "0");
+  const minutes = (Math.floor(remainingMs / (1000 * 60)) % 60).toString().padStart(2, "0");
+  const seconds = (Math.floor(remainingMs / 1000) % 60).toString().padStart(2, "0");
 
-  return `${days}d ${hours}h`;
+  return { days, hours, minutes, seconds };
 };

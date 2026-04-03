@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getMayorData } from "@/lib/hypixel";
 import { cleanText } from "@/lib/formatting";
-
+import ElectionTimer from "@/components/ElectionTimer";
 interface Perk {
   name: string;
   description: string;
@@ -26,7 +26,7 @@ export default async function MayorTile() {
               </li>
             ))}
           </ul>
-          <p className="text-orange-400 mt-auto text-right text-sm">Election booth closes in: 2d 4h</p>
+          {data?.mayor?.election?.year && <ElectionTimer targetYear={data.mayor.election.year} />}
         </div>
       </div>
     </Link>
