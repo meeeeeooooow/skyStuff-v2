@@ -16,7 +16,7 @@ export default function Footer() {
           </Link>
         </div>
 
-        <div className="w-full md:w-1/3 text-center md:text-right text-xs">
+        <div className="w-full md:w-1/3 text-center md:text-right">
           Not affiliated with Hypixel or Mojang
         </div>
 
