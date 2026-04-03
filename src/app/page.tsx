@@ -1,6 +1,6 @@
 import EventTile from "@/components/EventTile";
 import MayorTile from "@/components/MayorTile";
-import Searchbar from "@/components/Searchbar";
+import Searchbar from "@/components/ProfileSearchTile";
 export default function Home() {
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 flex flex-col gap-12">

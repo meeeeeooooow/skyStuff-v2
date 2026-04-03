@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 export default function Searchbar() {
   return (
     <div className="flex flex-col items-center text-center gap-4">
-      <h1 className="text-4xl font-bold">SkyStuff Profile Viewer</h1>
+      <h1 className="text-4xl font-bold">Profile Viewer</h1>
       <div className="relative w-full max-w-2xl">
         <Search
           className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"
