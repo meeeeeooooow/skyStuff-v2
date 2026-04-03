@@ -3,17 +3,23 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 border-t border-gray-800 py-2">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-400">
-        <p>
-          &copy; 2026 SkyStuff 
-          <span className="mx-2">&bull;</span> 
-          Not affiliated with or endorsed by Hypixel Inc. 
-          <span className="mx-2">&bull;</span> 
+    <footer className="bg-gray-900 border-t border-gray-800 py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400 gap-4">
+        
+        <div className="w-full md:w-1/3 text-center md:text-left">
+          &copy; 2026 SkyStuff
+        </div>
+
+        <div className="w-full md:w-1/3 flex justify-center gap-6">
           <Link href="/about" className="hover:text-white transition-colors">
             About
           </Link>
-        </p>
+        </div>
+
+        <div className="w-full md:w-1/3 text-center md:text-right text-xs">
+          Not affiliated with Hypixel or Mojang
+        </div>
+
       </div>
     </footer>
   );
