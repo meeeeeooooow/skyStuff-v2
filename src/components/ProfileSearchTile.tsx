@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Loader2 } from "lucide-react";
 import { getPlayerProfile } from "@/lib/hypixel";
@@ -10,6 +10,7 @@ export default function Searchbar() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = async () => {
     if (!username.trim()) return;
@@ -22,6 +23,10 @@ export default function Searchbar() {
       
       if ("error" in response) {
         setErrorMessage(response.error);
+        setTimeout(() => {
+          inputRef.current?.focus();
+          inputRef.current?.select();
+        }, 0);
       } else {
         router.push(`/profile/${username}`);
       }
@@ -48,6 +53,7 @@ export default function Searchbar() {
           />
         )}
         <input
+          ref={inputRef}
           type="text"
           placeholder="Enter Minecraft Username..."
           value={username}
