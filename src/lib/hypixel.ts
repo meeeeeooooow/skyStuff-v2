@@ -2,6 +2,7 @@
 
 import { promises as fs } from 'fs';
 import path from 'path';
+import profileData from '../data/profile-data.json';
 
 export async function getMayorData() {
   // For now, read the local mock data file.
@@ -23,5 +24,5 @@ export async function getPlayerProfile(username: string) {
     return { error: 'No Hypixel data found for this player.' };
   }
 
-  return { success: true };
+  return profileData;
 }

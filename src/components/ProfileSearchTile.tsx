@@ -20,7 +20,7 @@ export default function Searchbar() {
     try {
       const response = await getPlayerProfile(username);
       
-      if (response.error) {
+      if ("error" in response) {
         setErrorMessage(response.error);
       } else {
         router.push(`/profile/${username}`);
