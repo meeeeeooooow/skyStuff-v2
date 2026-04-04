@@ -3,8 +3,8 @@ import { Settings } from 'lucide-react';
 
 export default function Navbar() {
   return (
-    <nav className="bg-gray-900 border-b border-gray-800">
-      <div className="w-full px-4 flex justify-between items-center h-14">
+    <nav className="bg-gray-900 border-b border-gray-800 fixed top-0 w-full z-50 h-14">
+      <div className="w-full px-4 flex justify-between items-center h-full">
         <Link href="/" className="text-2xl font-bold text-white">
           SkyStuff
         </Link>
