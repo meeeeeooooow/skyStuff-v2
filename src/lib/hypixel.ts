@@ -24,5 +24,10 @@ export async function getPlayerProfile(username: string) {
     return { error: 'No Hypixel data found for this player.' };
   }
 
-  return profileData;
+  // Extracting the UUID from our mock data to simulate a Mojang API fetch.
+  // This guarantees the UUID matches the members object in your mock JSON!
+  const mojangUuid = Object.keys(profileData.profiles[0].members)[0];
+
+  const data = profileData as any;
+  return { ...data, uuid: mojangUuid };
 }

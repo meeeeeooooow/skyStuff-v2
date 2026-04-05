@@ -1,5 +1,5 @@
 import { getPlayerProfile } from "@/lib/hypixel";
-import ProfileHeader from "@/components/ProfileHeader";
+import ProfileDashboard from "@/components/ProfileDashboard";
 
 export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
@@ -17,10 +17,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
 
   return (
     <div className="p-8 text-white">
-      <ProfileHeader username={username} profiles={profileData.profiles} />
-      <pre className="bg-gray-900 p-6 rounded-xl overflow-x-auto text-sm text-gray-300 border border-gray-800">
-        {JSON.stringify(profileData, null, 2)}
-      </pre>
+      <ProfileDashboard username={username} profileData={profileData} uuid={profileData.uuid} />
     </div>
   );
 }

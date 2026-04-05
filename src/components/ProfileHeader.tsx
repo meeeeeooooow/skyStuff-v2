@@ -11,10 +11,17 @@ export interface Profile {
   game_mode?: string;
 }
 
-export default function ProfileHeader({ username, profiles }: { username: string; profiles: Profile[] }) {
-  const [activeProfile, setActiveProfile] = useState(
-    profiles.find((profile) => profile.selected)?.cute_name || ""
-  );
+export default function ProfileHeader({ 
+  username, 
+  profiles, 
+  activeProfile, 
+  onProfileSelect 
+}: { 
+  username: string; 
+  profiles: Profile[];
+  activeProfile: string;
+  onProfileSelect: (profileName: string) => void;
+}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState("");
@@ -56,7 +63,7 @@ export default function ProfileHeader({ username, profiles }: { username: string
           {profiles.map((profile) => (
             <button
               key={profile.cute_name}
-              onClick={() => setActiveProfile(profile.cute_name)}
+              onClick={() => onProfileSelect(profile.cute_name)}
               className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${
                 activeProfile === profile.cute_name
                   ? "bg-orange-500 text-white"
