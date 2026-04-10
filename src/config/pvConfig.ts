@@ -1,8 +1,61 @@
+import { level200PetLevels, petRarityOffset, standardPetLevels } from "../data/pets";
+
+
 export interface StatItem {
   name: string;
   category: string;
   tags: string[];
   getValue: (player: any, profile?: any) => any;
+}
+
+function formatPetName(type: string): string {
+  if (!type) return "None";
+  return type
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+function calculatePetLevel(tier: string, exp: number, type: string): number {
+  const level200Pets = ['GOLDEN_DRAGON', 'JADE_DRAGON', 'ROSE_DRAGON'];
+  const isLevel200Pet = level200Pets.includes(type);
+
+  const offsetKey = isLevel200Pet ? 'LEGENDARY' : tier;
+  
+  const offset = petRarityOffset[offsetKey as keyof typeof petRarityOffset] || 0;
+
+  let level = 1;
+  let remainingExp = exp;
+
+  for (let i = offset; i < standardPetLevels.length; i++) {
+    const xpNeeded = standardPetLevels[i];
+    
+    if (remainingExp >= xpNeeded) {
+      remainingExp -= xpNeeded;
+      level++;
+      
+      if (level === 100) break;
+    } else {
+      return level; 
+    }
+  }
+
+  if (isLevel200Pet && level === 100) {
+    for (let i = 0; i < level200PetLevels.length; i++) {
+      const xpNeeded = level200PetLevels[i];
+      
+      if (remainingExp >= xpNeeded) {
+        remainingExp -= xpNeeded;
+        level++;
+        
+        if (level === 200) break;
+      } else {
+        break;
+      }
+    }
+  }
+
+  return level;
 }
 
 export const pvConfig: StatItem[] = [  
@@ -234,22 +287,49 @@ export const pvConfig: StatItem[] = [
     category: "Pets",
     tags: ["active", "pet", "current", "companion", "equipped"],
     getValue: (player: any) => {
-      const activePet = player?.pets?.find((p: any) => p.active);
-      // We return the pet's type if we find one, otherwise we default to "None"
-      return activePet ? activePet.type : "None";
+      const rawPets = player?.pets_data?.pets || [];
+      const activePet = rawPets.find((p: any) => p.active);
+      
+      if (!activePet) return "None";
+      
+      const name = formatPetName(activePet.type);
+      const level = calculatePetLevel(activePet.tier, activePet.exp, activePet.type);
+      
+      return `[Lvl ${level}] ${name}`;
+    }
+  },
+  {
+    name: "Inactive Pets",
+    category: "Pets",
+    tags: ["roster", "inactive", "list", "all pets"],
+    getValue: (player: any) => {
+      const rawPets = player?.pets_data?.pets || [];
+      const inactivePets = rawPets.filter((p: any) => !p.active);
+      
+      if (!inactivePets.length) return "None";
+      
+      return inactivePets.map((pet: any) => {
+        const name = formatPetName(pet.type);
+        const level = calculatePetLevel(pet.tier, pet.exp, pet.type);
+        
+        return `[Lvl ${level}] ${name}`;
+      });
     }
   },
   {
     name: "Total Pets",
     category: "Pets",
     tags: ["total", "pets", "amount", "count", "roster"],
-    getValue: (player: any) => player?.pets?.length || 0
+    getValue: (player: any) => {
+      const rawPets = player?.pets_data?.pets || [];
+      return rawPets.length;
+    }
   },
   {
     name: "Pet Score",
     category: "Pets",
     tags: ["pet score", "score", "magic find", "pets"],
-    getValue: (player: any) => player?.pet_stats?.pet_score || player?.pet_score || 0
+    getValue: (player: any) => player?.pets_data?.pet_score || player?.pet_score || 0
   },
   {
     name: "Magical Power",
