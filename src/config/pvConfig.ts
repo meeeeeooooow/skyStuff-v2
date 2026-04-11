@@ -301,7 +301,7 @@ export const pvConfig: StatItem[] = [
   {
     name: "Inactive Pets",
     category: "Pets",
-    tags: ["roster", "inactive", "list", "all pets"],
+    tags: ["inactive", "list", "all pets", "pets"],
     getValue: (player: any) => {
       const rawPets = player?.pets_data?.pets || [];
       const inactivePets = rawPets.filter((p: any) => !p.active);
@@ -317,21 +317,6 @@ export const pvConfig: StatItem[] = [
     }
   },
   {
-    name: "Total Pets",
-    category: "Pets",
-    tags: ["total", "pets", "amount", "count", "roster"],
-    getValue: (player: any) => {
-      const rawPets = player?.pets_data?.pets || [];
-      return rawPets.length;
-    }
-  },
-  {
-    name: "Pet Score",
-    category: "Pets",
-    tags: ["pet score", "score", "magic find", "pets"],
-    getValue: (player: any) => player?.pets_data?.pet_score || player?.pet_score || 0
-  },
-  {
     name: "Magical Power",
     category: "Accessories",
     tags: ["mp", "magical power", "talisman", "talismans", "accessories", "bag"],
@@ -343,7 +328,6 @@ export const pvConfig: StatItem[] = [
     tags: ["selected power", "power stone", "stone", "reforge", "accessories"],
     getValue: (player: any) => {
       const power = player?.accessory_bag_storage?.selected_power;
-      // If a power exists, we capitalize the first letter to make it look nice on the dashboard
       return power ? power.charAt(0).toUpperCase() + power.slice(1) : "None";
     }
   },

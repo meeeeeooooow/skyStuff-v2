@@ -5,6 +5,8 @@ import ProfileHeader from "./ProfileHeader";
 import PlayerModel from "./PlayerModel";
 import { pvConfig } from "@/config/pvConfig";
 
+const categories = Array.from(new Set(pvConfig.map(item => item.category)));
+
 export default function ProfileDashboard({ 
   username, 
   profileData,
@@ -24,8 +26,6 @@ export default function ProfileDashboard({
 
   const playerData = currentProfile?.members?.[uuid] || {};
 
-  const categories = Array.from(new Set(pvConfig.map(item => item.category)));
-
   return (
     <>
       <ProfileHeader 
@@ -41,12 +41,25 @@ export default function ProfileDashboard({
               <h3 className="text-xl font-bold text-white mb-2">{category}</h3>
               {pvConfig.filter(item => item.category === category).map((item) => {
                 const rawValue = item.getValue(playerData, currentProfile);
-                const displayValue = typeof rawValue === "number" 
-                  ? new Intl.NumberFormat('en-US').format(rawValue) 
-                  : (typeof rawValue === "object" && rawValue !== null ? JSON.stringify(rawValue) : rawValue);
-                return (
+                
+                return Array.isArray(rawValue) ? (
+                  <div key={item.name} className="text-gray-300">
+                    <span className="font-semibold">{item.name}:</span>
+                    {rawValue.length === 0 ? (
+                      <p className="ml-4 text-gray-500">None</p>
+                    ) : (
+                      rawValue.map((val, idx) => (
+                        <p key={idx} className="ml-4">
+                          {typeof val === "object" && val !== null ? JSON.stringify(val) : String(val)}
+                        </p>
+                      ))
+                    )}
+                  </div>
+                ) : (
                   <p key={item.name} className="text-gray-300">
-                    {item.name}: {displayValue}
+                    <span className="font-semibold">{item.name}:</span> {typeof rawValue === "number" 
+                      ? new Intl.NumberFormat('en-US').format(rawValue) 
+                      : (typeof rawValue === "object" && rawValue !== null ? JSON.stringify(rawValue) : rawValue)}
                   </p>
                 );
               })}
@@ -54,7 +67,7 @@ export default function ProfileDashboard({
           ))}
         </div>
         <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 flex justify-center w-full lg:w-auto">
-          <PlayerModel username={username} level={Math.floor((playerData?.leveling?.experience || 0) / 100) || 0} />
+          <PlayerModel username={username} level={pvConfig.find(item => item.name === "Skyblock Level")?.getValue(playerData, currentProfile) || 0} />
         </div>
       </div>
       <pre className="bg-gray-900 p-6 rounded-xl overflow-x-auto text-sm text-gray-300 border border-gray-800 mt-8">
