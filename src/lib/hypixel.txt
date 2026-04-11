@@ -109,8 +109,8 @@ export async function getPlayerProfile(username: string): Promise<(HypixelProfil
     for (const profile of hypixelData.profiles) {
       const player = profile.members?.[mojangUuid];
       for (const key of inventoryKeys) {
-        if (player?.inventory?.bag_contents?.[key]?.data) {
-          player.inventory.bag_contents[key].data = await decodeNBT(player.inventory.bag_contents[key].data);
+        if (player?.[key]?.data) {
+          player[key].data = await decodeNBT(player[key].data);
         }
       }
     }

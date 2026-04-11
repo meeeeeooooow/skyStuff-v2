@@ -332,6 +332,19 @@ export const pvConfig: StatItem[] = [
     }
   },
   {
+    name: "Accessory List",
+    category: "Accessories",
+    tags: ["accessories", "list", "talisman", "talismans", "bag"],
+    getValue: (player: any) => {
+      const talismanData = player?.inventory?.bag_contents?.talisman_bag?.data;
+      if (!talismanData) return [];
+      
+      return talismanData
+        .filter((item: any) => item.id || item.tag)
+        .map((item: any) => (item.tag?.value?.display?.value?.Name?.value || "Unknown Accessory").replace(/§./g, "")); 
+    }
+  },
+  {
     name: "Selected Faction",
     category: "Crimson Isle",
     tags: ["faction", "crimson", "isle", "mage", "barbarian"],
