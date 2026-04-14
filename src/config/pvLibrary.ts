@@ -57,6 +57,22 @@ function calculatePetLevel(tier: string, exp: number, type: string): number {
   return level;
 }
 
+function getProfileCollectionTotal(profile: any, keys: string[]): number {
+  let total = 0;
+  const members = Object.values(profile?.members || {});
+
+  for (const member of members as any[]) {
+    for (const key of keys) {
+      if (member?.collection?.[key] !== undefined) {
+        total += member.collection[key];
+        break;
+      }
+    }
+  }
+
+  return total;
+}
+
 export const pvLibrary: Record<string, StatItem> = {
   skyblock_level: {
     name: "Skyblock Level",
@@ -260,25 +276,25 @@ export const pvLibrary: Record<string, StatItem> = {
     name: "Wheat Collection",
     category: "Collections",
     tags: ["wheat", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.WHEAT || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["WHEAT"])
   },
   potato_collection: {
     name: "Potato Collection",
     category: "Collections",
     tags: ["potato", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.POTATO_ITEM || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["POTATO_ITEM"])
   },
   carrot_collection: {
     name: "Carrot Collection",
     category: "Collections",
     tags: ["carrot", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.CARROT_ITEM || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["CARROT_ITEM"])
   },
   bank_balance: {
     name: "Bank Balance",
     category: "Economy",
     tags: ["bank", "coins", "money", "shared", "economy"],
-    getValue: (player: any, profile: any) => Math.floor(profile?.banking?.balance || 0)
+    getValue: (player: any, profile: any) => Math.floor((profile?.banking?.balance || player?.profile?.bank_account || 0))
   },
   active_pet: {
     name: "Active Pet",
@@ -433,493 +449,493 @@ export const pvLibrary: Record<string, StatItem> = {
     name: "Pumpkin Collection",
     category: "Collections",
     tags: ["pumpkin", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.PUMPKIN || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["PUMPKIN"])
   },
   melon_collection: {
     name: "Melon Collection",
     category: "Collections",
     tags: ["melon", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.MELON || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["MELON"])
   },
   seeds_collection: {
     name: "Seeds Collection",
     category: "Collections",
     tags: ["seeds", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.SEEDS || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["SEEDS"])
   },
   mushroom_collection: {
     name: "Mushroom Collection",
     category: "Collections",
     tags: ["mushroom", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.MUSHROOM_COLLECTION || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["MUSHROOM_COLLECTION"])
   },
   cocoa_beans_collection: {
     name: "Cocoa Beans Collection",
     category: "Collections",
     tags: ["cocoa", "beans", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.["INK_SACK:3"] || player?.collection?.INK_SACK_3 || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["INK_SACK:3", "INK_SACK_3"])
   },
   cactus_collection: {
     name: "Cactus Collection",
     category: "Collections",
     tags: ["cactus", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.CACTUS || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["CACTUS"])
   },
   sugar_cane_collection: {
     name: "Sugar Cane Collection",
     category: "Collections",
     tags: ["sugar cane", "cane", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.SUGAR_CANE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["SUGAR_CANE"])
   },
   nether_wart_collection: {
     name: "Nether Wart Collection",
     category: "Collections",
     tags: ["nether wart", "wart", "farming", "crop", "collection"],
-    getValue: (player: any) => player?.collection?.NETHER_STALK || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["NETHER_STALK"])
   },
   leather_collection: {
     name: "Leather Collection",
     category: "Collections",
     tags: ["leather", "cow", "farming", "animal", "collection"],
-    getValue: (player: any) => player?.collection?.LEATHER || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["LEATHER"])
   },
   raw_porkchop_collection: {
     name: "Raw Porkchop Collection",
     category: "Collections",
     tags: ["porkchop", "pork", "pig", "farming", "animal", "collection"],
-    getValue: (player: any) => player?.collection?.PORK || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["PORK"])
   },
   raw_chicken_collection: {
     name: "Raw Chicken Collection",
     category: "Collections",
     tags: ["chicken", "farming", "animal", "collection"],
-    getValue: (player: any) => player?.collection?.RAW_CHICKEN || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["RAW_CHICKEN"])
   },
   feather_collection: {
     name: "Feather Collection",
     category: "Collections",
     tags: ["feather", "chicken", "farming", "animal", "collection"],
-    getValue: (player: any) => player?.collection?.FEATHER || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["FEATHER"])
   },
   mutton_collection: {
     name: "Mutton Collection",
     category: "Collections",
     tags: ["mutton", "sheep", "farming", "animal", "collection"],
-    getValue: (player: any) => player?.collection?.MUTTON || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["MUTTON"])
   },
   raw_rabbit_collection: {
     name: "Raw Rabbit Collection",
     category: "Collections",
     tags: ["rabbit", "farming", "animal", "collection"],
-    getValue: (player: any) => player?.collection?.RABBIT || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["RABBIT"])
   },
   sunflower_collection: {
     name: "Sunflower Collection",
     category: "Collections",
     tags: ["sunflower", "farming", "crop", "collection", "flower"],
-    getValue: (player: any) => player?.collection?.SUNFLOWER || player?.collection?.["DOUBLE_PLANT:0"] || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["SUNFLOWER", "DOUBLE_PLANT:0"])
   },
   moonflower_collection: {
     name: "Moonflower Collection",
     category: "Collections",
     tags: ["moonflower", "farming", "crop", "collection", "flower"],
-    getValue: (player: any) => player?.collection?.MOONFLOWER || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["MOONFLOWER"])
   },
   wild_rose_collection: {
     name: "Wild Rose Collection",
     category: "Collections",
     tags: ["wild rose", "rose", "farming", "crop", "collection", "flower"],
-    getValue: (player: any) => player?.collection?.WILD_ROSE || player?.collection?.["DOUBLE_PLANT:4"] || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["WILD_ROSE", "DOUBLE_PLANT:4"])
   },
   rotten_flesh_collection: {
     name: "Rotten Flesh Collection",
     category: "Collections",
     tags: ["rotten flesh", "flesh", "zombie", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.ROTTEN_FLESH || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["ROTTEN_FLESH"])
   },
   bone_collection: {
     name: "Bone Collection",
     category: "Collections",
     tags: ["bone", "skeleton", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.BONE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["BONE"])
   },
   string_collection: {
     name: "String Collection",
     category: "Collections",
     tags: ["string", "spider", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.STRING || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["STRING"])
   },
   spider_eye_collection: {
     name: "Spider Eye Collection",
     category: "Collections",
     tags: ["spider eye", "eye", "spider", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.SPIDER_EYE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["SPIDER_EYE"])
   },
   gunpowder_collection: {
     name: "Gunpowder Collection",
     category: "Collections",
     tags: ["gunpowder", "sulphur", "creeper", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.SULPHUR || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["SULPHUR"])
   },
   slimeball_collection: {
     name: "Slimeball Collection",
     category: "Collections",
     tags: ["slimeball", "slime", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.SLIME_BALL || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["SLIME_BALL"])
   },
   ender_pearl_collection: {
     name: "Ender Pearl Collection",
     category: "Collections",
     tags: ["ender pearl", "pearl", "enderman", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.ENDER_PEARL || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["ENDER_PEARL"])
   },
   ghast_tear_collection: {
     name: "Ghast Tear Collection",
     category: "Collections",
     tags: ["ghast tear", "tear", "ghast", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.GHAST_TEAR || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["GHAST_TEAR"])
   },
   blaze_rod_collection: {
     name: "Blaze Rod Collection",
     category: "Collections",
     tags: ["blaze rod", "blaze", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.BLAZE_ROD || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["BLAZE_ROD"])
   },
   magma_cream_collection: {
     name: "Magma Cream Collection",
     category: "Collections",
     tags: ["magma cream", "magma", "cube", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.MAGMA_CREAM || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["MAGMA_CREAM"])
   },
   chili_pepper_collection: {
     name: "Chili Pepper Collection",
     category: "Collections",
     tags: ["chili pepper", "chili", "pepper", "farming", "inferno", "collection"],
-    getValue: (player: any) => player?.collection?.CHILI_PEPPER || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["CHILI_PEPPER"])
   },
   raw_fish_collection: {
     name: "Raw Fish Collection",
     category: "Collections",
     tags: ["fish", "raw fish", "fishing", "collection"],
-    getValue: (player: any) => player?.collection?.RAW_FISH || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["RAW_FISH"])
   },
   raw_salmon_collection: {
     name: "Raw Salmon Collection",
     category: "Collections",
     tags: ["salmon", "fishing", "collection"],
-    getValue: (player: any) => player?.collection?.["RAW_FISH:1"] || player?.collection?.RAW_FISH_1 || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["RAW_FISH:1", "RAW_FISH_1"])
   },
   clownfish_collection: {
     name: "Clownfish Collection",
     category: "Collections",
     tags: ["clownfish", "fishing", "collection"],
-    getValue: (player: any) => player?.collection?.["RAW_FISH:2"] || player?.collection?.RAW_FISH_2 || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["RAW_FISH:2", "RAW_FISH_2"])
   },
   pufferfish_collection: {
     name: "Pufferfish Collection",
     category: "Collections",
     tags: ["pufferfish", "fishing", "collection"],
-    getValue: (player: any) => player?.collection?.["RAW_FISH:3"] || player?.collection?.RAW_FISH_3 || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["RAW_FISH:3", "RAW_FISH_3"])
   },
   prismarine_shard_collection: {
     name: "Prismarine Shard Collection",
     category: "Collections",
     tags: ["prismarine", "shard", "fishing", "collection"],
-    getValue: (player: any) => player?.collection?.PRISMARINE_SHARD || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["PRISMARINE_SHARD"])
   },
   prismarine_crystals_collection: {
     name: "Prismarine Crystals Collection",
     category: "Collections",
     tags: ["prismarine", "crystals", "fishing", "collection"],
-    getValue: (player: any) => player?.collection?.PRISMARINE_CRYSTALS || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["PRISMARINE_CRYSTALS"])
   },
   clay_collection: {
     name: "Clay Collection",
     category: "Collections",
     tags: ["clay", "fishing", "collection"],
-    getValue: (player: any) => player?.collection?.CLAY_BALL || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["CLAY_BALL"])
   },
   lily_pad_collection: {
     name: "Lily Pad Collection",
     category: "Collections",
     tags: ["lily pad", "lily", "fishing", "collection"],
-    getValue: (player: any) => player?.collection?.WATER_LILY || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["WATER_LILY"])
   },
   ink_sac_collection: {
     name: "Ink Sac Collection",
     category: "Collections",
     tags: ["ink sac", "ink", "squid", "fishing", "collection"],
-    getValue: (player: any) => player?.collection?.INK_SACK || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["INK_SACK"])
   },
   sponge_collection: {
     name: "Sponge Collection",
     category: "Collections",
     tags: ["sponge", "fishing", "collection"],
-    getValue: (player: any) => player?.collection?.SPONGE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["SPONGE"])
   },
   magmafish_collection: {
     name: "Magmafish Collection",
     category: "Collections",
     tags: ["magmafish", "magma", "fishing", "crimson", "collection"],
-    getValue: (player: any) => player?.collection?.MAGMA_FISH || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["MAGMA_FISH"])
   },
   oak_wood_collection: {
     name: "Oak Wood Collection",
     category: "Collections",
     tags: ["oak", "wood", "foraging", "tree", "collection"],
-    getValue: (player: any) => player?.collection?.LOG || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["LOG"])
   },
   spruce_wood_collection: {
     name: "Spruce Wood Collection",
     category: "Collections",
     tags: ["spruce", "wood", "foraging", "tree", "collection"],
-    getValue: (player: any) => player?.collection?.["LOG:1"] || player?.collection?.LOG_1 || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["LOG:1", "LOG_1"])
   },
   birch_wood_collection: {
     name: "Birch Wood Collection",
     category: "Collections",
     tags: ["birch", "wood", "foraging", "tree", "collection"],
-    getValue: (player: any) => player?.collection?.["LOG:2"] || player?.collection?.LOG_2 || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["LOG:2", "LOG_2"])
   },
   jungle_wood_collection: {
     name: "Jungle Wood Collection",
     category: "Collections",
     tags: ["jungle", "wood", "foraging", "tree", "collection"],
-    getValue: (player: any) => player?.collection?.["LOG:3"] || player?.collection?.LOG_3 || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["LOG:3", "LOG_3"])
   },
   acacia_wood_collection: {
     name: "Acacia Wood Collection",
     category: "Collections",
     tags: ["acacia", "wood", "foraging", "tree", "collection"],
-    getValue: (player: any) => player?.collection?.LOG_2 || player?.collection?.["LOG_2:0"] || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["LOG_2", "LOG_2:0"])
   },
   dark_oak_wood_collection: {
     name: "Dark Oak Wood Collection",
     category: "Collections",
     tags: ["dark oak", "wood", "foraging", "tree", "collection"],
-    getValue: (player: any) => player?.collection?.["LOG_2:1"] || player?.collection?.LOG_2_1 || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["LOG_2:1", "LOG_2_1"])
   },
   fig_log_collection: {
     name: "Fig Log Collection",
     category: "Collections",
     tags: ["fig", "log", "wood", "foraging", "tree", "collection", "galatea"],
-    getValue: (player: any) => player?.collection?.FIG_LOG || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["FIG_LOG"])
   },
   tender_wood_collection: {
     name: "Tender Wood Collection",
     category: "Collections",
     tags: ["tender", "wood", "fig", "foraging", "tree", "collection", "galatea"],
-    getValue: (player: any) => player?.collection?.TENDER_WOOD || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["TENDER_WOOD"])
   },
   mangrove_log_collection: {
     name: "Mangrove Log Collection",
     category: "Collections",
     tags: ["mangrove", "log", "wood", "foraging", "tree", "collection", "galatea"],
-    getValue: (player: any) => player?.collection?.MANGROVE_LOG || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["MANGROVE_LOG"])
   },
   vinesap_collection: {
     name: "Vinesap Collection",
     category: "Collections",
     tags: ["vinesap", "mangrove", "foraging", "tree", "collection", "galatea"],
-    getValue: (player: any) => player?.collection?.VINESAP || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["VINESAP"])
   },
   lushlilac_collection: {
     name: "Lushlilac Collection",
     category: "Collections",
     tags: ["lushlilac", "bush", "foraging", "collection", "galatea", "salt"],
-    getValue: (player: any) => player?.collection?.LUSHLILAC || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["LUSHLILAC"])
   },
   sea_lumies_collection: {
     name: "Sea Lumies Collection",
     category: "Collections",
     tags: ["sea lumies", "foraging", "collection", "galatea", "water"],
-    getValue: (player: any) => player?.collection?.SEA_LUMIES || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["SEA_LUMIES"])
   },
   cobblestone_collection: {
     name: "Cobblestone Collection",
     category: "Collections",
     tags: ["cobblestone", "cobble", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.COBBLESTONE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["COBBLESTONE"])
   },
   coal_collection: {
     name: "Coal Collection",
     category: "Collections",
     tags: ["coal", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.COAL || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["COAL"])
   },
   iron_collection: {
     name: "Iron Collection",
     category: "Collections",
     tags: ["iron", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.IRON_INGOT || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["IRON_INGOT"])
   },
   gold_collection: {
     name: "Gold Collection",
     category: "Collections",
     tags: ["gold", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.GOLD_INGOT || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["GOLD_INGOT"])
   },
   diamond_collection: {
     name: "Diamond Collection",
     category: "Collections",
     tags: ["diamond", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.DIAMOND || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["DIAMOND"])
   },
   lapis_lazuli_collection: {
     name: "Lapis Lazuli Collection",
     category: "Collections",
     tags: ["lapis", "lazuli", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.["INK_SACK:4"] || player?.collection?.INK_SACK_4 || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["INK_SACK:4", "INK_SACK_4"])
   },
   redstone_collection: {
     name: "Redstone Collection",
     category: "Collections",
     tags: ["redstone", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.REDSTONE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["REDSTONE"])
   },
   emerald_collection: {
     name: "Emerald Collection",
     category: "Collections",
     tags: ["emerald", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.EMERALD || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["EMERALD"])
   },
   gravel_collection: {
     name: "Gravel Collection",
     category: "Collections",
     tags: ["gravel", "mining", "block", "collection"],
-    getValue: (player: any) => player?.collection?.GRAVEL || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["GRAVEL"])
   },
   sand_collection: {
     name: "Sand Collection",
     category: "Collections",
     tags: ["sand", "mining", "block", "collection"],
-    getValue: (player: any) => player?.collection?.SAND || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["SAND"])
   },
   ice_collection: {
     name: "Ice Collection",
     category: "Collections",
     tags: ["ice", "mining", "block", "collection"],
-    getValue: (player: any) => player?.collection?.ICE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["ICE"])
   },
   obsidian_collection: {
     name: "Obsidian Collection",
     category: "Collections",
     tags: ["obsidian", "mining", "block", "collection"],
-    getValue: (player: any) => player?.collection?.OBSIDIAN || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["OBSIDIAN"])
   },
   end_stone_collection: {
     name: "End Stone Collection",
     category: "Collections",
     tags: ["end stone", "end", "mining", "block", "collection"],
-    getValue: (player: any) => player?.collection?.ENDER_STONE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["ENDER_STONE"])
   },
   netherrack_collection: {
     name: "Netherrack Collection",
     category: "Collections",
     tags: ["netherrack", "nether", "mining", "block", "collection"],
-    getValue: (player: any) => player?.collection?.NETHERRACK || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["NETHERRACK"])
   },
   nether_quartz_collection: {
     name: "Nether Quartz Collection",
     category: "Collections",
     tags: ["quartz", "nether", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.QUARTZ || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["QUARTZ"])
   },
   glowstone_collection: {
     name: "Glowstone Collection",
     category: "Collections",
     tags: ["glowstone", "dust", "nether", "mining", "block", "collection"],
-    getValue: (player: any) => player?.collection?.GLOWSTONE_DUST || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["GLOWSTONE_DUST"])
   },
   mithril_collection: {
     name: "Mithril Collection",
     category: "Collections",
     tags: ["mithril", "dwarven", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.MITHRIL_ORE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["MITHRIL_ORE"])
   },
   hard_stone_collection: {
     name: "Hard Stone Collection",
     category: "Collections",
     tags: ["hard stone", "crystal hollows", "mining", "block", "collection"],
-    getValue: (player: any) => player?.collection?.HARD_STONE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["HARD_STONE"])
   },
   gemstone_collection: {
     name: "Gemstone Collection",
     category: "Collections",
     tags: ["gemstone", "crystal hollows", "mining", "ore", "collection"],
-    getValue: (player: any) => player?.collection?.GEMSTONE_COLLECTION || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["GEMSTONE_COLLECTION"])
   },
   mycelium_collection: {
     name: "Mycelium Collection",
     category: "Collections",
     tags: ["mycelium", "crimson isle", "mage", "mining", "block", "collection"],
-    getValue: (player: any) => player?.collection?.MYCEL || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["MYCEL"])
   },
   red_sand_collection: {
     name: "Red Sand Collection",
     category: "Collections",
     tags: ["red sand", "crimson isle", "barbarian", "mining", "block", "collection"],
-    getValue: (player: any) => player?.collection?.["SAND:1"] || player?.collection?.SAND_1 || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["SAND:1", "SAND_1"])
   },
   glacite_collection: {
     name: "Glacite Collection",
     category: "Collections",
     tags: ["glacite", "tunnels", "minesense", "mining", "collection"],
-    getValue: (player: any) => player?.collection?.GLACITE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["GLACITE"])
   },
   tungsten_collection: {
     name: "Tungsten Collection",
     category: "Collections",
     tags: ["tungsten", "tunnels", "minesense", "mining", "collection"],
-    getValue: (player: any) => player?.collection?.TUNGSTEN || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["TUNGSTEN"])
   },
   umber_collection: {
     name: "Umber Collection",
     category: "Collections",
     tags: ["umber", "tunnels", "minesense", "mining", "collection"],
-    getValue: (player: any) => player?.collection?.UMBER || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["UMBER"])
   },
   half_eaten_carrot_collection: {
     name: "Half-Eaten Carrot Collection",
     category: "Collections",
     tags: ["half-eaten carrot", "carrot", "rift", "farming", "collection"],
-    getValue: (player: any) => player?.collection?.HALF_EATEN_CARROT || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["HALF_EATEN_CARROT"])
   },
   wilted_berberis_collection: {
     name: "Wilted Berberis Collection",
     category: "Collections",
     tags: ["wilted berberis", "berberis", "rift", "foraging", "collection"],
-    getValue: (player: any) => player?.collection?.WILTED_BERBERIS || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["WILTED_BERBERIS"])
   },
   agaricus_cap_collection: {
     name: "Agaricus Cap Collection",
     category: "Collections",
     tags: ["agaricus cap", "agaricus", "mushroom", "rift", "farming", "collection"],
-    getValue: (player: any) => player?.collection?.AGARICUS_CAP || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["AGARICUS_CAP"])
   },
   caducous_stem_collection: {
     name: "Caducous Stem Collection",
     category: "Collections",
     tags: ["caducous stem", "caducous", "rift", "foraging", "collection"],
-    getValue: (player: any) => player?.collection?.CADUCOUS_STEM || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["CADUCOUS_STEM"])
   },
   hemovibe_collection: {
     name: "Hemovibe Collection",
     category: "Collections",
     tags: ["hemovibe", "blood", "vampire", "rift", "combat", "collection"],
-    getValue: (player: any) => player?.collection?.HEMOVIBE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["HEMOVIBE"])
   },
   living_metal_heart_collection: {
     name: "Living Metal Heart Collection",
     category: "Collections",
     tags: ["living metal heart", "living metal", "rift", "mining", "collection"],
-    getValue: (player: any) => player?.collection?.LIVING_METAL_HEART || player?.collection?.LIVING_METAL || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["LIVING_METAL_HEART", "LIVING_METAL"])
   },
   timite_collection: {
     name: "Timite Collection",
     category: "Collections",
     tags: ["timite", "rift", "collection"],
-    getValue: (player: any) => player?.collection?.TIMITE || 0
+    getValue: (player: any, profile: any) => getProfileCollectionTotal(profile, ["TIMITE"])
   },
   bonzo_boss_collection_f1: {
     name: "Bonzo Boss Collection (F1)",
