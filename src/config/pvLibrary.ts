@@ -73,7 +73,7 @@ function getProfileCollectionTotal(profile: any, keys: string[]): number {
   return total;
 }
 
-export const pvLibrary: Record<string, StatItem> = {
+export const pvLibrary: Record<string, StatItem> = new Proxy({
   skyblock_level: {
     name: "Skyblock Level",
     category: "General",
@@ -104,73 +104,73 @@ export const pvLibrary: Record<string, StatItem> = {
     tags: ["motes", "rift", "rift coins"],
     getValue: (player: any) => player?.currencies?.motes_purse || player?.rift?.motes?.purse || 0
   },
-  farming: {
+  farming_xp: {
     name: "Farming",
     category: "Skills",
     tags: ["farming", "farm", "crop", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_FARMING || player?.experience_skill_farming || 0
   },
-  mining: {
+  mining_xp: {
     name: "Mining",
     category: "Skills",
     tags: ["mining", "mine", "ore", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_MINING || player?.experience_skill_mining || 0
   },
-  combat: {
+  combat_xp: {
     name: "Combat",
     category: "Skills",
     tags: ["combat", "fight", "sword", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_COMBAT || player?.experience_skill_combat || 0
   },
-  foraging: {
+  foraging_xp: {
     name: "Foraging",
     category: "Skills",
     tags: ["foraging", "wood", "tree", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_FORAGING || player?.experience_skill_foraging || 0
   },
-  fishing: {
+  fishing_xp: {
     name: "Fishing",
     category: "Skills",
     tags: ["fishing", "fish", "rod", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_FISHING || player?.experience_skill_fishing || 0
   },
-  enchanting: {
+  enchanting_xp: {
     name: "Enchanting",
     category: "Skills",
     tags: ["enchanting", "enchant", "magic", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_ENCHANTING || player?.experience_skill_enchanting || 0
   },
-  alchemy: {
+  alchemy_xp: {
     name: "Alchemy",
     category: "Skills",
     tags: ["alchemy", "potion", "brew", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_ALCHEMY || player?.experience_skill_alchemy || 0
   },
-  taming: {
+  taming_xp: {
     name: "Taming",
     category: "Skills",
     tags: ["taming", "pet", "pets", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_TAMING || player?.experience_skill_taming || 0
   },
-  carpentry: {
+  carpentry_xp: {
     name: "Carpentry",
     category: "Skills",
     tags: ["carpentry", "furniture", "crafting", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_CARPENTRY || player?.experience_skill_carpentry || 0
   },
-  runecrafting: {
+  runecrafting_xp: {
     name: "Runecrafting",
     category: "Skills",
     tags: ["runecrafting", "rune", "cosmetic", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_RUNECRAFTING || player?.experience_skill_runecrafting || 0
   },
-  social: {
+  social_xp: {
     name: "Social",
     category: "Skills",
     tags: ["social", "guest", "island", "skill"],
     getValue: (player: any) => player?.player_data?.experience?.SKILL_SOCIAL || player?.experience_skill_social || 0
   },
-  hunting: {
+  hunting_xp: {
     name: "Hunting",
     category: "Skills",
     tags: ["hunting", "hunt", "animal", "skill"],
@@ -1039,4 +1039,17 @@ export const pvLibrary: Record<string, StatItem> = {
       return player?.fairy_soul?.fairy_exchanges || player?.fairy_exchanges || 0;
     }
   }
-};
+} as Record<string, StatItem>, {
+  get(target, prop) {
+    if (typeof prop === "string" && !(prop in target)) {
+      const formattedName = prop.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+      return {
+        name: formattedName,
+        category: "Error",
+        tags: ["error", "missing"],
+        getValue: () => `[${formattedName}] is missing from the library`
+      };
+    }
+    return Reflect.get(target, prop);
+  }
+});
