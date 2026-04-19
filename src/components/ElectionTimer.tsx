@@ -3,6 +3,12 @@ import { useState, useEffect } from "react";
 import { getElectionTimestamps, formatTimeRemaining } from "@/lib/skyblockTime";
 
 export default function ElectionTimer({ targetYear }: { targetYear: number }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const getTimerState = () => {
     let currentYear = targetYear;
     let { boothOpenTime, boothCloseTime } = getElectionTimestamps(currentYear);
@@ -28,6 +34,18 @@ export default function ElectionTimer({ targetYear }: { targetYear: number }) {
 
     return () => clearInterval(interval);
   }, []);
+
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-end gap-1 text-orange-400 mt-auto text-sm tabular-nums opacity-0">
+        <span>Election booth closes in:</span>
+        <span className="flex"><span className="w-[2ch] text-right">--</span>d</span>
+        <span className="flex"><span className="w-[2ch] text-right">--</span>h</span>
+        <span className="flex"><span className="w-[2ch] text-right">--</span>m</span>
+        <span className="flex"><span className="w-[2ch] text-right">--</span>s</span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-end gap-1 text-orange-400 mt-auto text-sm tabular-nums">

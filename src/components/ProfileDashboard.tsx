@@ -113,9 +113,6 @@ export default function ProfileDashboard({
           <PlayerModel username={username} level={pvLibrary["skyblock_level"]?.getValue(playerData, currentProfile) || 0} />
         </div>
       </div>
-      <pre className="bg-gray-900 p-6 rounded-xl overflow-x-auto text-sm text-gray-300 border border-gray-800 mt-8">
-        {JSON.stringify(currentProfile, null, 2)}
-      </pre>
 
       <LayoutEditor
         isOpen={isEditorOpen}
