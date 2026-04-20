@@ -1038,6 +1038,209 @@ export const pvLibrary: Record<string, StatItem> = new Proxy({
     getValue: (player: any) => {
       return player?.fairy_soul?.fairy_exchanges || player?.fairy_exchanges || 0;
     }
+  },
+  total_secrets: {
+    name: "Total Secrets",
+    category: "Dungeons",
+    tags: ["secrets", "dungeons", "treasure", "hunter"],
+    getValue: (player: any) => player?.dungeons?.secrets || 0
+  },
+  total_completions: {
+    name: "Total Completions",
+    category: "Dungeons",
+    tags: ["dungeons", "runs", "completions", "total"],
+    getValue: (player: any) => {
+      const normalCompletions = player?.dungeons?.dungeon_types?.catacombs?.tier_completions || {};
+      const masterCompletions = player?.dungeons?.dungeon_types?.master_catacombs?.tier_completions || {};
+
+      let total = 0;
+      for (let i = 0; i <= 7; i++) {
+        total += normalCompletions[i] || 0;
+      }
+      for (let i = 1; i <= 7; i++) {
+        total += masterCompletions[i] || 0;
+      }
+
+      return total;
+    }
+  },
+  total_attempts: {
+    name: "Total Attempts",
+    category: "Dungeons",
+    tags: ["dungeons", "runs", "attempts", "played", "total"],
+    getValue: (player: any) => {
+      const normalCompletions = player?.dungeons?.dungeon_types?.catacombs?.times_played || {};
+      const masterCompletions = player?.dungeons?.dungeon_types?.master_catacombs?.times_played || {};
+
+      let total = 0;
+      for (let i = 0; i <= 7; i++) {
+        total += normalCompletions[i] || 0;
+      }
+      for (let i = 1; i <= 7; i++) {
+        total += masterCompletions[i] || 0;
+      }
+
+      return total;
+    }
+  },
+  floor_completions: {
+    name: "Floor Completions",
+    category: "Dungeons",
+    tags: ["dungeons", "floor", "completions", "runs", "highest"],
+    getValue: (player: any) => {
+      const overview: string[] = [];
+      const normalCompletions = player?.dungeons?.dungeon_types?.catacombs?.tier_completions || {};
+      const masterCompletions = player?.dungeons?.dungeon_types?.master_catacombs?.tier_completions || {};
+
+      for (let i = 0; i <= 7; i++) {
+        const runs = normalCompletions[i];
+        if (runs) {
+          overview.push(`${i === 0 ? "Entrance" : `Floor ${i}`}: ${runs}`);
+        }
+      }
+
+      for (let i = 1; i <= 7; i++) {
+        const runs = masterCompletions[i];
+        if (runs) {
+          overview.push(`Master ${i}: ${runs}`);
+        }
+      }
+
+      return overview.length > 0 ? overview : ["None"];
+    }
+  },
+  secrets_per_run: {
+    name: "Secrets per Run",
+    category: "Dungeons",
+    tags: ["secrets", "ratio", "average", "dungeons", "runs"],
+    getValue: (player: any) => {
+      const totalSecrets = player?.dungeons?.secrets || 0;
+      
+      const normalCompletions = player?.dungeons?.dungeon_types?.catacombs?.tier_completions || {};
+      const masterCompletions = player?.dungeons?.dungeon_types?.master_catacombs?.tier_completions || {};
+
+      let totalRuns = 0;
+      for (let i = 0; i <= 7; i++) {
+        totalRuns += normalCompletions[i] || 0;
+      }
+      for (let i = 1; i <= 7; i++) {
+        totalRuns += masterCompletions[i] || 0;
+      }
+
+      if (totalRuns === 0) return 0;
+
+      return Math.round((totalSecrets / totalRuns) * 100) / 100;
+    }
+  },
+  highest_floor_completed: {
+    name: "Highest Floor Completed",
+    category: "Dungeons",
+    tags: ["dungeons", "floor", "highest", "completions"],
+    getValue: (player: any) => {
+      const masterCompletions = player?.dungeons?.dungeon_types?.master_catacombs?.tier_completions || {};
+      const normalCompletions = player?.dungeons?.dungeon_types?.catacombs?.tier_completions || {};
+
+      for (let i = 7; i >= 1; i--) {
+        if (masterCompletions[i]) {
+          return `Master ${i}`;
+        }
+      }
+
+      for (let i = 7; i >= 1; i--) {
+        if (normalCompletions[i]) {
+          return `Floor ${i}`;
+        }
+      }
+
+      if (normalCompletions[0]) return "Entrance";
+
+      return "None";
+    }
+  },
+  selected_dungeon_class: {
+    name: "Selected Class",
+    category: "Dungeons",
+    tags: ["class", "selected", "dungeon", "role"],
+    getValue: (player: any) => {
+      const currentClass = player?.dungeons?.selected_dungeon_class;
+      if (currentClass) {
+        return currentClass.charAt(0).toUpperCase() + currentClass.slice(1);
+      }
+      return "None";
+    }
+  },
+  blood_mobs_killed: {
+    name: "Blood Mobs Killed",
+    category: "Dungeons",
+    tags: ["blood", "mobs", "kills", "watcher", "dungeon"],
+    getValue: (player: any) => player?.dungeons?.dungeon_types?.catacombs?.watcher_kills?.total || 0
+  },
+  fastest_s_plus_times: {
+    name: "Fastest S+ Times",
+    category: "Dungeons",
+    tags: ["fastest", "time", "s+", "s plus", "dungeon", "times"],
+    getValue: (player: any) => {
+      const times: string[] = [];
+      const normalCompletions = player?.dungeons?.dungeon_types?.catacombs?.fastest_time_s_plus || {};
+      const masterCompletions = player?.dungeons?.dungeon_types?.master_catacombs?.fastest_time_s_plus || {};
+
+      for (let i = 1; i <= 7; i++) {
+        const ms = normalCompletions[i];
+        if (ms) {
+          const totalSeconds = Math.floor(ms / 1000);
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+          times.push(`Floor ${i}: ${minutes}:${seconds.toString().padStart(2, '0')}`);
+        }
+      }
+
+      for (let i = 1; i <= 7; i++) {
+        const ms = masterCompletions[i];
+        if (ms) {
+          const totalSeconds = Math.floor(ms / 1000);
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+          times.push(`Master ${i}: ${minutes}:${seconds.toString().padStart(2, '0')}`);
+        }
+      }
+
+      return times.length > 0 ? times : ["None"];
+    }
+  },
+  floor_win_rates: {
+    name: "Floor Survival Rates",
+    category: "Dungeons",
+    tags: ["floors", "attempts", "win rate", "completions"],
+    getValue: (player: any) => {
+      const overview: string[] = [];
+      const normalCompletions = player?.dungeons?.dungeon_types?.catacombs?.tier_completions || {};
+      const normalAttempts = player?.dungeons?.dungeon_types?.catacombs?.times_played || {};
+      const masterCompletions = player?.dungeons?.dungeon_types?.master_catacombs?.tier_completions || {};
+      const masterAttempts = player?.dungeons?.dungeon_types?.master_catacombs?.times_played || {};
+
+      for (let i = 0; i <= 7; i++) {
+        const comps = normalCompletions[i] || 0;
+        const attempts = normalAttempts[i] || 0;
+        if (attempts > 0) {
+          const winRate = Math.round((comps / attempts) * 100);
+          const floorName = i === 0 ? "Entrance" : `Floor ${i}`;
+          overview.push(`${floorName}: ${comps} / ${attempts} (${winRate}%)`);
+        }
+      }
+
+      for (let i = 1; i <= 7; i++) {
+        const comps = masterCompletions[i] || 0;
+        const attempts = masterAttempts[i] || 0;
+        if (attempts > 0) {
+          const winRate = Math.round((comps / attempts) * 100);
+          overview.push(`Master ${i}: ${comps} / ${attempts} (${winRate}%)`);
+        } else if (comps > 0) {
+          overview.push(`Master ${i}: ${comps} completions (Attempts API Bugged)`);
+        }
+      }
+
+      return overview.length > 0 ? overview : ["No dungeon data"];
+    }
   }
 } as Record<string, StatItem>, {
   get(target, prop) {
