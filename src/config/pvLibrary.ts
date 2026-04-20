@@ -73,6 +73,107 @@ function getProfileCollectionTotal(profile: any, keys: string[]): number {
   return total;
 }
 
+const masterEssencePerks: Record<string, { name: string; categories: string[] }> = {
+  // Undead Essence
+  catacombs_boss_luck: { name: "Boss Luck", categories: ["Dungeons"] },
+  catacombs_looting: { name: "Looting", categories: ["Dungeons"] },
+  revive_stone: { name: "Help of the Fairies", categories: ["Dungeons"] },
+  catacombs_health: { name: "Health Essence", categories: ["Dungeons"] },
+  catacombs_defense: { name: "Defense Essence", categories: ["Dungeons"] },
+  catacombs_strength: { name: "Strength Essence", categories: ["Dungeons"] },
+  catacombs_intelligence: { name: "Intelligence Essence", categories: ["Dungeons"] },
+  catacombs_crit_damage: { name: "Critical Essence", categories: ["Dungeons"] },
+
+  // Wither Essence
+  permanent_health: { name: "Forbidden Health", categories: ["General", "Combat", "Dungeons"] },
+  permanent_defense: { name: "Forbidden Defense", categories: ["General", "Combat", "Dungeons"] },
+  permanent_speed: { name: "Forbidden Speed", categories: ["General", "Combat", "Dungeons"] },
+  permanent_intelligence: { name: "Forbidden Intelligence", categories: ["General", "Combat", "Dungeons"] },
+  permanent_strength: { name: "Forbidden Strength", categories: ["General", "Combat", "Dungeons"] },
+  forbidden_blessing: { name: "Forbidden Blessing", categories: ["Dungeons"] },
+  dungeonbreaker_secrets: { name: "Echoes of the Lost", categories: ["Dungeons"] },
+
+  // Dragon Essence
+  flat_damage_vs_ender: { name: "One Punch", categories: ["Combat", "Dungeons"] },
+  mana_after_ender_kill: { name: "Recharge", categories: ["Combat"] },
+  fero_vs_dragons: { name: "Rageborn", categories: ["Combat"] },
+  inc_zealots_odds: { name: "Zealuck", categories: ["Combat"] },
+  combat_wisdom_in_end: { name: "Ender Training", categories: ["Combat"] },
+  edrag_cd: { name: "Infused Dragon", categories: ["Combat"] },
+  unbridled_rage: { name: "Unbridled Rage", categories: ["Dungeons"] },
+  dragon_reforges_buff: { name: "Two-Headed Strike", categories: ["General", "Combat", "Dungeons"] },
+  increased_sup_chances: { name: "Dragon Piper", categories: ["Combat"] },
+
+  // Spider Essence
+  empowered_agility: { name: "Empowered Agility", categories: ["General", "Combat", "Dungeons"] },
+  vermin_control: { name: "Vermin Control", categories: ["Combat", "Dungeons"] },
+  bane: { name: "Bane", categories: ["Combat", "Dungeons"] },
+  spider_training: { name: "Spider Training", categories: ["Combat"] },
+  toxophilite: { name: "Toxophilite", categories: ["Dungeons"] },
+
+  // Ice Essence
+  cold_efficiency: { name: "Cold Efficiency", categories: ["Dungeons"] },
+  cooled_forges: { name: "Cooled Forges", categories: ["General", "Dungeons"] },
+  frozen_skin: { name: "Frozen Skin", categories: ["General", "Combat", "Dungeons"] },
+  season_of_joy: { name: "Season of Joy", categories: ["General"] },
+  drake_piper: { name: "Drake Piper", categories: ["Fishing", "Combat"] },
+
+  // Gold Essence
+  heart_of_gold: { name: "Heart of Gold", categories: ["Dungeons"] },
+  treasures_of_the_earth: { name: "Treasure of the Earth", categories: ["Mining"] },
+  dwarven_training: { name: "Dwarven Training", categories: ["Mining"] },
+  unbreaking: { name: "Unbreaking", categories: ["General", "Combat", "Dungeons"] },
+  eager_miner: { name: "Eager Miner", categories: ["Mining"] },
+  midas_lure: { name: "Midas Lure", categories: ["Fishing"] },
+
+  // Diamond Essence
+  radiant_fisher: { name: "Radiant Fisher", categories: ["Fishing"] },
+  diamond_in_the_rough: { name: "Diamond in the Rough", categories: ["Dungeons"] },
+  rhinestone_infusion: { name: "Rhinestone Infusion", categories: ["Mining"] },
+  under_pressure: { name: "Under Pressure", categories: ["Mining"] },
+  high_roller: { name: "High Roller", categories: ["Mining"] },
+  return_to_sender: { name: "Return to Sender", categories: ["Mining"] },
+
+  // Crimson Essence
+  strongarm_kuudra: { name: "Strongarm", categories: ["Combat"] },
+  fresh_tools_kuudra: { name: "Fresh Tools", categories: ["Combat"] },
+  headstart_kuudra: { name: "Headstart", categories: ["Combat"] },
+  master_kuudra: { name: "Kuudra Master", categories: ["Combat"] },
+  fungus_fortuna: { name: "Fungus Fortuna", categories: ["Mining"] },
+  harena_fortuna: { name: "Harena Fortuna", categories: ["Mining"] },
+  crimson_training: { name: "Crimson Training", categories: ["Combat"] },
+  wither_piper: { name: "Wither Piper", categories: ["Combat"] },
+
+  // Forest Essence
+  trapped: { name: "Trapped", categories: ["Foraging"] },
+  axed: { name: "Axed", categories: ["Foraging", "Combat"] },
+  extreme_pressure: { name: "Extreme Pressure", categories: ["Mining"] },
+  lumberjack: { name: "Lumberjack", categories: ["Foraging"] },
+  tasty: { name: "Tasty", categories: ["Foraging", "General"] },
+  forest_training: { name: "Forest Training", categories: ["Foraging"] },
+
+  // Agatha Essence
+  agatha_power: { name: "Agatha Power", categories: ["Foraging"] },
+  agatha_fig_fortune: { name: "Fig Fortune", categories: ["Foraging"] },
+  agatha_mangrove_fortune: { name: "Mangrove Fortune", categories: ["Foraging"] },
+  agatha_fig_personal_best: { name: "Fig Personal Best", categories: ["Foraging"] },
+  agatha_mangrove_personal_best: { name: "Mangrove Personal Best", categories: ["Foraging"] },
+
+  // Sun Gecko Essence
+  blessing_of_time: { name: "Blessing of Time", categories: ["General", "Combat", "Dungeons"] }
+};
+
+function getEssencePerksByCategory(player: any, targetCategory: string): string[] {
+  const results: string[] = [];
+  const perks = player?.player_data?.perks || {};
+  for (const key in masterEssencePerks) {
+    if (masterEssencePerks[key].categories.includes(targetCategory) && perks[key] !== undefined) {
+      results.push(`${masterEssencePerks[key].name} Level ${perks[key]}`);
+    }
+  }
+  return results.length > 0 ? results : ["None"];
+}
+
 export const pvLibrary: Record<string, StatItem> = new Proxy({
   skyblock_level: {
     name: "Skyblock Level",
@@ -1207,39 +1308,48 @@ export const pvLibrary: Record<string, StatItem> = new Proxy({
       return times.length > 0 ? times : ["None"];
     }
   },
-  floor_win_rates: {
-    name: "Floor Survival Rates",
+  dungeon_essence_perks: {
+    name: "Dungeon Essence Perks",
     category: "Dungeons",
-    tags: ["floors", "attempts", "win rate", "completions"],
+    tags: ["perks", "essence", "dungeons", "upgrades"],
+    getValue: (player: any) => getEssencePerksByCategory(player, "Dungeons")
+  },
+  mining_essence_perks: {
+    name: "Mining Essence Perks",
+    category: "Mining",
+    tags: ["perks", "essence", "mining", "upgrades"],
+    getValue: (player: any) => getEssencePerksByCategory(player, "Mining")
+  },
+  combat_essence_perks: {
+    name: "Combat Essence Perks",
+    category: "Combat",
+    tags: ["perks", "essence", "combat", "upgrades"],
+    getValue: (player: any) => getEssencePerksByCategory(player, "Combat")
+  },
+  general_essence_perks: {
+    name: "General Essence Perks",
+    category: "General",
+    tags: ["perks", "essence", "general", "upgrades"],
+    getValue: (player: any) => getEssencePerksByCategory(player, "General")
+  },
+  foraging_essence_perks: {
+    name: "Foraging Essence Perks",
+    category: "Foraging",
+    tags: ["perks", "essence", "foraging", "upgrades"],
+    getValue: (player: any) => getEssencePerksByCategory(player, "Foraging")
+  },
+  fishing_essence_perks: {
+    name: "Fishing Essence Perks",
+    category: "Fishing",
+    tags: ["perks", "essence", "fishing", "upgrades"],
+    getValue: (player: any) => getEssencePerksByCategory(player, "Fishing")
+  },
+  cookie_buff_active: {
+    name: "Cookie Buff Active",
+    category: "General",
+    tags: ["cookie", "buff", "profile", "active"],
     getValue: (player: any) => {
-      const overview: string[] = [];
-      const normalCompletions = player?.dungeons?.dungeon_types?.catacombs?.tier_completions || {};
-      const normalAttempts = player?.dungeons?.dungeon_types?.catacombs?.times_played || {};
-      const masterCompletions = player?.dungeons?.dungeon_types?.master_catacombs?.tier_completions || {};
-      const masterAttempts = player?.dungeons?.dungeon_types?.master_catacombs?.times_played || {};
-
-      for (let i = 0; i <= 7; i++) {
-        const comps = normalCompletions[i] || 0;
-        const attempts = normalAttempts[i] || 0;
-        if (attempts > 0) {
-          const winRate = Math.round((comps / attempts) * 100);
-          const floorName = i === 0 ? "Entrance" : `Floor ${i}`;
-          overview.push(`${floorName}: ${comps} / ${attempts} (${winRate}%)`);
-        }
-      }
-
-      for (let i = 1; i <= 7; i++) {
-        const comps = masterCompletions[i] || 0;
-        const attempts = masterAttempts[i] || 0;
-        if (attempts > 0) {
-          const winRate = Math.round((comps / attempts) * 100);
-          overview.push(`Master ${i}: ${comps} / ${attempts} (${winRate}%)`);
-        } else if (comps > 0) {
-          overview.push(`Master ${i}: ${comps} completions (Attempts API Bugged)`);
-        }
-      }
-
-      return overview.length > 0 ? overview : ["No dungeon data"];
+      return player?.profile?.cookie_buff_active === true ? "Active" : "Inactive";
     }
   }
 } as Record<string, StatItem>, {
