@@ -90,7 +90,13 @@ export const pvLayouts: Record<string, string[]> = {
     "selected_dungeon_class",
     "cookie_buff_active",
     "favorite_arrow",
-    "teleporter_pill_consumed"
+    "teleporter_pill_consumed",
+    "grubber_stacks",
+    "refined_jyrre_uses",
+    "refined_dark_cacao_truffles",
+    "serums_drank",
+    "reaper_peppers_eaten",
+    "larva_consumed"
   ],
   dungeons: [
     "skyblock_level",

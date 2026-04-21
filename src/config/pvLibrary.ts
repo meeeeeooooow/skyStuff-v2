@@ -1014,19 +1014,37 @@ export const pvLibrary: Record<string, StatItem> = new Proxy({
     name: "Refined Jyrre",
     category: "Consumables",
     tags: ["consumables", "winter", "jyrre", "stats"],
-    getValue: (player: any) => player?.winter_player_data?.refined_jyrre_uses || 0
+    getValue: (player: any) => player?.winter_player_data?.refined_jyrre_uses || "Not Consumed"
   },
   refined_dark_cacao_truffles: {
     name: "Refined Dark Cacao Truffle",
     category: "Consumables",
     tags: ["consumables", "easter", "truffle", "cacao"],
-    getValue: (player: any) => player?.events?.easter?.refined_dark_cacao_truffles || 0
+    getValue: (player: any) => player?.events?.easter?.refined_dark_cacao_truffles || "Not Consumed"
   },
   serums_drank: {
     name: "Serums",
     category: "Consumables",
     tags: ["consumables", "experimentation", "serum", "enchanting"],
-    getValue: (player: any) => player?.experimentation?.serums_drank || 0
+    getValue: (player: any) => player?.experimentation?.serums_drank || "Not Consumed"
+  },
+  reaper_peppers_eaten: {
+    name: "Reaper Peppers",
+    category: "Consumables",
+    tags: ["consumables", "pepper", "reaper", "stats"],
+    getValue: (player: any) => player?.player_data?.reaper_peppers_eaten || "Not Consumed"
+  },
+  grubber_stacks: {
+    name: "Grubber Stacks",
+    category: "Rift",
+    tags: ["rift", "grubber", "castle", "consumables"],
+    getValue: (player: any) => player?.rift?.castle?.grubber_stacks || "Not Consumed"
+  },
+  larva_consumed: {
+    name: "Larva Consumed",
+    category: "Consumables",
+    tags: ["consumables", "garden", "larva", "pest", "stats"],
+    getValue: (player: any) => player?.garden_player_data?.larva_consumed || "Not Consumed"
   }
 } as Record<string, StatItem>, {
   get(target, prop) {
