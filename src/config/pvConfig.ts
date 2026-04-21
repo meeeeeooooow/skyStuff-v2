@@ -85,7 +85,6 @@ export const pvLayouts: Record<string, string[]> = {
     "general_essence_perks",
     "foraging_essence_perks",
     "fishing_essence_perks",
-    "catacombs_base_stats",
     "dungeon_journals",
     "selected_dungeon_class",
     "cookie_buff_active",

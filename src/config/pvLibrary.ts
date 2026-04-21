@@ -958,6 +958,40 @@ export const pvLibrary: Record<string, StatItem> = new Proxy({
       return formattedScores.length > 0 ? formattedScores.join(', ') : "No Scores";
     }
   },
+  highest_class_damage: {
+    name: "Highest Class Damage",
+    category: "Dungeons",
+    tags: ["dungeons", "damage", "class", "stats"],
+    getValue: (player: any) => {
+      const mageNormal = player?.dungeons?.dungeon_types?.catacombs?.most_damage_mage || {};
+      const mageMaster = player?.dungeons?.dungeon_types?.master_catacombs?.most_damage_mage || {};
+      const archerNormal = player?.dungeons?.dungeon_types?.catacombs?.most_damage_archer || {};
+      const archerMaster = player?.dungeons?.dungeon_types?.master_catacombs?.most_damage_archer || {};
+      const healerNormal = player?.dungeons?.dungeon_types?.catacombs?.most_damage_healer || {};
+      const healerMaster = player?.dungeons?.dungeon_types?.master_catacombs?.most_damage_healer || {};
+      const tankNormal = player?.dungeons?.dungeon_types?.catacombs?.most_damage_tank || {};
+      const tankMaster = player?.dungeons?.dungeon_types?.master_catacombs?.most_damage_tank || {};
+      const berserkNormal = player?.dungeons?.dungeon_types?.catacombs?.most_damage_berserk || {};
+      const berserkMaster = player?.dungeons?.dungeon_types?.master_catacombs?.most_damage_berserk || {};
+
+      const highestMageDamage = Math.max(0, ...(Object.values(mageNormal) as number[]), ...(Object.values(mageMaster) as number[]));
+      const highestArcherDamage = Math.max(0, ...(Object.values(archerNormal) as number[]), ...(Object.values(archerMaster) as number[]));
+      const highestHealerDamage = Math.max(0, ...(Object.values(healerNormal) as number[]), ...(Object.values(healerMaster) as number[]));
+      const highestTankDamage = Math.max(0, ...(Object.values(tankNormal) as number[]), ...(Object.values(tankMaster) as number[]));
+      const highestBerserkDamage = Math.max(0, ...(Object.values(berserkNormal) as number[]), ...(Object.values(berserkMaster) as number[]));
+
+      const formattedDamage: string[] = [];
+
+      if (highestMageDamage > 0) formattedDamage.push("Mage: " + highestMageDamage.toLocaleString());
+      if (highestArcherDamage > 0) formattedDamage.push("Archer: " + highestArcherDamage.toLocaleString());
+      if (highestHealerDamage > 0) formattedDamage.push("Healer: " + highestHealerDamage.toLocaleString());
+      if (highestTankDamage > 0) formattedDamage.push("Tank: " + highestTankDamage.toLocaleString());
+      if (highestBerserkDamage > 0) formattedDamage.push("Berserk: " + highestBerserkDamage.toLocaleString());
+
+      if (formattedDamage.length === 0) return "No Damage Recorded";
+      return formattedDamage.join(', ');
+    }
+  },
   dungeon_essence_perks: {
     name: "Dungeon Essence Perks",
     category: "Dungeons",
