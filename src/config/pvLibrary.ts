@@ -930,6 +930,34 @@ export const pvLibrary: Record<string, StatItem> = new Proxy({
       return times.length > 0 ? times : ["None"];
     }
   },
+  best_floor_scores: {
+    name: "Best Floor Scores",
+    category: "Dungeons",
+    tags: ["dungeons", "scores", "catacombs", "master"],
+    getValue: (player: any) => {
+      const normalScores = player?.dungeons?.dungeon_types?.catacombs?.best_score;
+      const masterScores = player?.dungeons?.dungeon_types?.master_catacombs?.best_score;
+      const formattedScores: string[] = [];
+
+      if (normalScores) {
+        for (const [floor, score] of Object.entries(normalScores)) {
+          if (floor === "0") {
+            formattedScores.push(`E: ${score}`);
+          } else {
+            formattedScores.push(`F${floor}: ${score}`);
+          }
+        }
+      }
+
+      if (masterScores) {
+        for (const [floor, score] of Object.entries(masterScores)) {
+          formattedScores.push(`M${floor}: ${score}`);
+        }
+      }
+
+      return formattedScores.length > 0 ? formattedScores.join(', ') : "No Scores";
+    }
+  },
   dungeon_essence_perks: {
     name: "Dungeon Essence Perks",
     category: "Dungeons",
