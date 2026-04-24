@@ -99,11 +99,13 @@ export default function ProfileDashboard({
                     )}
                   </div>
                 ) : (
-                  <p key={key} className="text-gray-300">
-                    <span className="font-semibold">{item.name}:</span> {typeof rawValue === "number" 
+                  <div key={key} className="text-gray-300">
+                    <span className="font-semibold">{item.name}:</span> {typeof rawValue === "string" 
+                      ? <div className="inventory-list mt-1" dangerouslySetInnerHTML={{ __html: rawValue }} />
+                      : typeof rawValue === "number" 
                       ? new Intl.NumberFormat('en-US').format(rawValue) 
                       : (typeof rawValue === "object" && rawValue !== null ? JSON.stringify(rawValue) : rawValue)}
-                  </p>
+                  </div>
                 );
               })}
             </div>

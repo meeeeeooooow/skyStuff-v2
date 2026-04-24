@@ -340,6 +340,31 @@ function getEssencePerksByCategory(player: any, targetCategory: string): string[
   return results.length > 0 ? results : ["None"];
 }
 
+function formatInventoryToHTML(dataArray: any[]): string {
+  if (!Array.isArray(dataArray)) {
+    return "Inventory Empty";
+  }
+
+  const formattedItems: string[] = [];
+
+  dataArray.forEach((item: any) => {
+    if (!item?.id || Object.keys(item).length === 0) {
+      return;
+    }
+
+    const rawName = item?.tag?.value?.display?.value?.Name?.value || "Unknown Item";
+    const cleanName = rawName.replace(/§./g, "");
+    
+    const rawLore = item?.tag?.value?.display?.value?.Lore?.value?.value || [];
+    const cleanLore = rawLore.map((line: string) => line.replace(/§./g, ""));
+    const formattedLore = cleanLore.length > 0 ? `<blockquote>${cleanLore.join("<br>")}</blockquote>` : "";
+    
+    formattedItems.push(`<li><details><summary>${cleanName}</summary>${formattedLore}</details></li>`);
+  });
+
+  return formattedItems.length > 0 ? `<ul>${formattedItems.join('')}</ul>` : "Inventory Empty";
+}
+
 export const pvLibrary: Record<string, StatItem> = new Proxy({
   skyblock_level: {
     name: "Skyblock Level",
@@ -1107,6 +1132,54 @@ export const pvLibrary: Record<string, StatItem> = new Proxy({
     category: "Consumables",
     tags: ["consumables", "garden", "larva", "pest", "stats"],
     getValue: (player: any) => player?.garden_player_data?.larva_consumed || "Not Consumed"
+  },
+  inventory: {
+    name: "Inventory",
+    category: "Inventories",
+    tags: ["inventory", "items", "storage"],
+    getValue: (player: any) => formatInventoryToHTML(player?.inventory?.inv_contents?.data)
+  },
+  inv_armor: {
+    name: "Armor",
+    category: "Inventories",
+    tags: ["armor", "helmet", "chestplate", "leggings", "boots"],
+    getValue: (player: any) => formatInventoryToHTML(player?.inventory?.inv_armor?.data)
+  },
+  equipment: {
+    name: "Equipment",
+    category: "Inventories",
+    tags: ["equipment", "necklace", "cloak", "belt", "bracelet"],
+    getValue: (player: any) => formatInventoryToHTML(player?.inventory?.equipment_contents?.data)
+  },
+  ender_chest: {
+    name: "Ender Chest",
+    category: "Inventories",
+    tags: ["ender chest", "echest", "storage", "items"],
+    getValue: (player: any) => formatInventoryToHTML(player?.inventory?.ender_chest_contents?.data)
+  },
+  wardrobe: {
+    name: "Wardrobe",
+    category: "Inventories",
+    tags: ["wardrobe", "armor", "storage", "outfits"],
+    getValue: (player: any) => formatInventoryToHTML(player?.inventory?.wardrobe_contents?.data)
+  },
+  talisman_bag: {
+    name: "Talisman Bag",
+    category: "Inventories",
+    tags: ["talisman", "accessory", "bag", "storage"],
+    getValue: (player: any) => formatInventoryToHTML(player?.inventory?.bag_contents?.talisman_bag?.data)
+  },
+  potion_bag: {
+    name: "Potion Bag",
+    category: "Inventories",
+    tags: ["potion", "bag", "storage", "consumables"],
+    getValue: (player: any) => formatInventoryToHTML(player?.inventory?.bag_contents?.potion_bag?.data)
+  },
+  fishing_bag: {
+    name: "Fishing Bag",
+    category: "Inventories",
+    tags: ["fishing", "bag", "storage", "bait", "catch"],
+    getValue: (player: any) => formatInventoryToHTML(player?.inventory?.bag_contents?.fishing_bag?.data)
   }
 } as Record<string, StatItem>, {
   get(target, prop) {

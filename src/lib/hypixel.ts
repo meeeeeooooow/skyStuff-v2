@@ -104,11 +104,19 @@ export async function getPlayerProfile(username: string): Promise<(HypixelProfil
       return { error: 'No SkyBlock profiles found for this player.' };
     }
 
-    const inventoryKeys = ['inv_contents', 'inv_armor', 'equipment_contents', 'talisman_bag', 'ender_chest_contents', 'wardrobe_contents', 'personal_vault_contents', 'potion_bag', 'fishing_bag'];
+    const coreInventories = ['inv_contents', 'inv_armor', 'equipment_contents', 'wardrobe_contents', 'ender_chest_contents', 'personal_vault_contents'];
+    const bagInventories = ['talisman_bag', 'potion_bag', 'fishing_bag'];
 
     for (const profile of hypixelData.profiles) {
       const player = profile.members?.[mojangUuid];
-      for (const key of inventoryKeys) {
+      
+      for (const key of coreInventories) {
+        if (player?.inventory?.[key]?.data) {
+          player.inventory[key].data = await decodeNBT(player.inventory[key].data);
+        }
+      }
+
+      for (const key of bagInventories) {
         if (player?.inventory?.bag_contents?.[key]?.data) {
           player.inventory.bag_contents[key].data = await decodeNBT(player.inventory.bag_contents[key].data);
         }
