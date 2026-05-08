@@ -353,16 +353,14 @@ function formatInventoryToHTML(dataArray: any[]): string {
     }
 
     const rawName = item?.tag?.value?.display?.value?.Name?.value || "Unknown Item";
-    const cleanName = rawName.replace(/§./g, "");
-    
+    const cleanName = rawName.replace(/§./g, "").replace(/([☠⚔❤❈✦✎☣⸎❣☂☘☮☄☯♨🦴])/g, '$1&#xFE0E;');   
     const rawLore = item?.tag?.value?.display?.value?.Lore?.value?.value || [];
     const cleanLore = rawLore.map((line: string) => line.replace(/§./g, ""));
-    const formattedLore = cleanLore.length > 0 ? `<blockquote>${cleanLore.join("<br>")}</blockquote>` : "";
     
-    formattedItems.push(`<li><details><summary>${cleanName}</summary>${formattedLore}</details></li>`);
+    formattedItems.push(`<h3>${cleanName}</h3><p>${cleanLore.join("<br>")}</p><hr>`);
   });
 
-  return formattedItems.length > 0 ? `<ul>${formattedItems.join('')}</ul>` : "Inventory Empty";
+  return formattedItems.length > 0 ? formattedItems.join('') : "Inventory Empty";
 }
 
 export const pvLibrary: Record<string, StatItem> = new Proxy({
