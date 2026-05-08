@@ -1,0 +1,58 @@
+====Skill Experience====
+In general, summoned pets can be leveled up to level 100, with the exception of the {{ID|Golden Dragon Pet}},  {{ID|Jade Dragon Pet}}, and {{ID|Rose Dragon Pet}}, which can go to level 200. The main way non-Gabagool Pets gain experience is from the players gaining Skill experience with the pet equipped. The skills {{Skill|Carpentry}}, {{Skill|Taming}}, {{Skill|Dungeoneering}}, {{Skill|Runecrafting}} and {{Skill|Social}} do not give pet experience. There are numerous factors that affect the pet experience gained, all of which are multiplicative and work when feeding Gabagool Pets as well.
+
+{| class="wikitable centertext"
+! Source
+! Bonus
+! Notes
+|-
+| {{Skill|Taming}}
+| {{Green|×1.01-1.6}}
+| Depends on Taming Level
+|-
+| {{NPCSprite|Diana}}'s {{Pink|Pet XP Buff}} perk
+| {{Green|×1.35}}
+| {{bc}}
+|-
+| Some [[Pet Items]]
+| {{Green|×1.1-1.5}}
+| Most pet items only affect Pet XP gain from a specific skill.
+|-
+| {{ID|Beastmaster Crest}}
+| {{Green|×1.001-1.05}}
+| Depends on player's kills and accessory's rarity
+|-
+| {{ID|Reindeer Pet}}
+| {{Green|×2}}
+| The pet's first ability makes it gain Double EXP.
+|-
+| {{Skill|Fishing}} and {{Skill|Mining}}
+| {{Green|×1.5}}
+| These two skills are 50% more efficient in leveling pets
+|-
+| {{Attr|Battle Experience X}}
+| {{Green|×1.1}}
+| Only works on {{Skill|Combat}} Experience
+|-
+| Different skill, than the pet's
+| {{red|×0.33}}
+| rowspan="2"| Always applies for {{ID|Owl Pet}}, but never for {{ID|Bingo Pet}}
+|-
+| {{Skill|Alchemy}} and {{Skill|Enchanting}}, unless the pet matches the Skill
+| {{Red|×0.08333}}
+|}
+
+For example, with a summoned [[Magma Cube Pet]] (a '''Combat''' pet), 100% of combat experience earned will grant as much experience to that pet. However, {{Skl|Farming}} experience will give only 33% of the experience earned to the pet.
+
+Note that increasing player's gain of a specific skill with {{Dark Aqua|Wisdom Stats}} reflects on the Experience gained by the Pet equipped.
+
+Pets can also gain experience with [[Pets#Exp Sharing|Exp Sharing]].
+
+=== Exp Sharing ===
+'''Exp Sharing''' is a system that allows players to level up ''Pets'' without having them be actively deployed. Players can assign a '''Pet''' to an Exp Share slot, upon which the '''Pet''' will gain the summoned Pet's XP at a reduced rate. Note that XP gained this way is still subject to the ×0.33 penalty of leveling a different skill than the Pet's, and will also receive the ×1.5 reward if you're gaining Mining or Fishing XP.
+
+Players have {{Green|1}} slot unlocked by default, while the other {{Green|2}} slots are only functional while {{NPCSprite|Diana}} is in office with her {{AN|Sharing is Caring}} perk active.
+
+The player can increase the percent shared by leveling their {{Skill|Taming}} level ({{Green|0.2%}} per Taming Level, up to a maximum of {{Green|12%}} at {{Skill|Taming|LX}}), by using an {{ID|Exp Share}} which gives a {{Green|15%}} boost (with an additional 10% from both {{AN|Sharing is Caring}} and {{Attribute|Why Not More}}), to a total of {{Green|37%}}.
+
+Pets in Exp Share slots do not gain XP if a pet is not summoned; additionally, pets in Exp Share slots that are actively deployed do not gain increased XP.

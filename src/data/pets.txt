@@ -366,9 +366,3 @@ export const petItemDisplayNameToId = {
   "§5Bingo Booster": "PET_ITEM_BINGO_BOOSTER",
   "§aSharpened Claws": "PET_ITEM_SHARPENED_CLAWS_UNCOMMON"
 };
-
-export const petItemMultipliers: Record<string, number> = {
-  "ALL_SKILLS_SUPER_BOOST": 1.2,
-  "PET_ITEM_ALL_SKILLS_BOOST_COMMON": 1.1,
-  "PET_ITEM_EXP_SHARE": 1.15,
-};
