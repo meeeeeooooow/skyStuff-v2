@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-// 1. A state for the Active Prompt
 export interface PromptState {
   isOpen: boolean;
   title?: string;
@@ -10,12 +9,10 @@ export interface PromptState {
   storageKey?: string;
 }
 
-// 2. A state for Granular Consents
 export type GranularConsents = Record<string, boolean>;
 
-// 3. The full Context Type defining our strict structure
 export interface StorageConsentContextType {
-  globalConsent: boolean | null; // null means the user hasn't decided yet
+  globalConsent: boolean | null;
   setGlobalConsent: (consent: boolean) => void;
   granularConsents: GranularConsents;
   setGranularConsent: (key: string, consent: boolean) => void;
@@ -33,7 +30,6 @@ export const StorageConsentProvider = ({ children }: { children: ReactNode }) =>
   const [activePrompt, setActivePrompt] = useState<PromptState>({ isOpen: false });
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Check localStorage on mount
   useEffect(() => {
     const savedPrefs = localStorage.getItem('privacy_preferences');
     if (savedPrefs) {
@@ -54,7 +50,6 @@ export const StorageConsentProvider = ({ children }: { children: ReactNode }) =>
     setIsInitialized(true);
   }, []);
 
-  // Sync state to localStorage whenever it changes
   useEffect(() => {
     if (!isInitialized) return;
     if (globalConsent === null && Object.keys(granularConsents).length === 0) return;
@@ -85,7 +80,6 @@ export const StorageConsentProvider = ({ children }: { children: ReactNode }) =>
     return false;
   };
 
-  // Wrapper function to easily update a single granular consent key
   const setGranularConsent = (key: string, consent: boolean) => {
     setGranularConsents((prev) => ({
       ...prev,

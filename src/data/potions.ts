@@ -2,7 +2,7 @@ export interface BrewingRecipe {
   potionName: string;
   ingredient: string;
   basePotion: string;
-  alchemyXpYield: number; // Explicitly Alchemy Skill XP
+  alchemyXpYield: number;
 }
 
 export const POTION_RECIPES: BrewingRecipe[] = [

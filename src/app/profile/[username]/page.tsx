@@ -28,7 +28,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
     }
   }
 
-  // Handle the case where the API returns an error
   if ("error" in profileData) {
     return (
       <div className="p-8 text-center text-white">
