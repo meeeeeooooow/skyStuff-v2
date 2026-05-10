@@ -3,14 +3,16 @@
 import { useState, useEffect } from 'react';
 import { Icon } from 'lucide-react';
 import { unicornHead } from '@lucide/lab';
-import { Globe, Sliders } from 'lucide-react';
+import { Globe, Sliders, Shield } from 'lucide-react';
 import { useVisualMode } from "@/context/VisualModeContext";
+import { useStorageConsent } from "@/context/StorageConsentContext";
 
 export default function SettingsModal({ onClose }: { onClose: () => void }) {
   const [activeTab, setActiveTab] = useState('performance');
   const [rawLocalStorage, setRawLocalStorage] = useState('');
 
   const { mode, setMode } = useVisualMode();
+  const { globalConsent, setGlobalConsent } = useStorageConsent();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -20,7 +22,7 @@ export default function SettingsModal({ onClose }: { onClose: () => void }) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [onClose]);
 
   useEffect(() => {
     try {
@@ -28,10 +30,10 @@ export default function SettingsModal({ onClose }: { onClose: () => void }) {
     } catch (error) {
       setRawLocalStorage('Failed to read local storage data.');
     }
-  }, []);
+  }, [globalConsent, mode]);
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-60 flex items-center justify-center" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center" onClick={onClose}>
       <div 
         className="bg-gray-900 border rounded-lg max-w-md w-full p-6" 
         onClick={(event) => event.stopPropagation()}
@@ -50,14 +52,15 @@ export default function SettingsModal({ onClose }: { onClose: () => void }) {
             Performance
           </button>
           <button
-            onClick={() => setActiveTab('storage')}
-            className={`px-4 py-2 font-medium text-sm transition-colors ${
-              activeTab === 'storage'
+            onClick={() => setActiveTab('privacy')}
+            className={`px-4 py-2 font-medium text-sm transition-colors flex items-center gap-1.5 ${
+              activeTab === 'privacy'
                 ? 'border-b-2 border-blue-500 text-white'
                 : 'text-gray-400 hover:text-white border-b-2 border-transparent'
             }`}
           >
-            Storage
+            <Shield size={16} />
+            Privacy
           </button>
         </div>
 
@@ -112,8 +115,18 @@ export default function SettingsModal({ onClose }: { onClose: () => void }) {
           </>
         )}
 
-        {activeTab === 'storage' && (
-          <div className="mt-4">
+        {activeTab === 'privacy' && (
+          <div className="mt-6 flex flex-col gap-6">
+            <label className="flex items-center gap-3 cursor-pointer p-3 border border-gray-700 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors">
+              <input
+                type="checkbox"
+                checked={globalConsent === true}
+                onChange={() => setGlobalConsent(!globalConsent)}
+                className="w-5 h-5 rounded border-gray-600 bg-gray-900 text-blue-500 focus:ring-blue-500 cursor-pointer"
+              />
+              <span className="font-medium text-white text-sm">Always remember my choices (Accept All)</span>
+            </label>
+
             <div className="flex flex-col gap-4">
               <div>
                 <h3 className="font-bold text-white text-sm mb-2">Local Storage Data</h3>

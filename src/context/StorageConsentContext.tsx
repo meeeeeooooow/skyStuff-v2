@@ -31,6 +31,7 @@ export const StorageConsentProvider = ({ children }: { children: ReactNode }) =>
   const [globalConsent, setGlobalConsentState] = useState<boolean | null>(null);
   const [granularConsents, setGranularConsents] = useState<GranularConsents>({});
   const [activePrompt, setActivePrompt] = useState<PromptState>({ isOpen: false });
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Check localStorage on mount
   useEffect(() => {
@@ -50,16 +51,18 @@ export const StorageConsentProvider = ({ children }: { children: ReactNode }) =>
         console.error("Failed to parse privacy preferences", error);
       }
     }
+    setIsInitialized(true);
   }, []);
 
   // Sync state to localStorage whenever it changes
   useEffect(() => {
+    if (!isInitialized) return;
     if (globalConsent === null && Object.keys(granularConsents).length === 0) return;
     localStorage.setItem('privacy_preferences', JSON.stringify({
       globalConsent,
       granularConsents
     }));
-  }, [globalConsent, granularConsents]);
+  }, [globalConsent, granularConsents, isInitialized]);
 
   const setGlobalConsent = (isGranted: boolean) => {
     setGlobalConsentState(isGranted);
@@ -89,6 +92,7 @@ export const StorageConsentProvider = ({ children }: { children: ReactNode }) =>
       [key]: consent
     }));
   };
+
 
   return (
     <StorageConsentContext.Provider

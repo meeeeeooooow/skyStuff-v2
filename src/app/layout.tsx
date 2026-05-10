@@ -28,18 +28,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+<html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="dark light" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var mode = localStorage.getItem('visualMode');
+                if (mode) document.documentElement.setAttribute('data-mode', mode);
+                else document.documentElement.setAttribute('data-mode', 'pretty');
+              } catch (e) {}
+            `,
+          }}
+        />
       </head>
       <body className="flex flex-col min-h-screen bg-gray-900 text-white">
         <StorageConsentProvider>
           <VisualModeProvider>
             <Navbar />
-            <main className="flex-1 pt-14">{children}</main>
+            <main className="flex-1 pt-14">
+              {children}
+              <StorageConsentPrompt />
+            </main>
             <Footer />
           </VisualModeProvider>
-          <StorageConsentPrompt />
         </StorageConsentProvider>
       </body>
     </html>
