@@ -67,17 +67,6 @@ export default function Searchbar() {
       {errorMessage && (
         <p className="text-red-400">{errorMessage}</p>
       )}
-      <div className="flex gap-3 mt-2">
-        <span className="bg-gray-800 border border-gray-700 rounded-full px-4 py-1 text-sm text-gray-400 hover:text-white hover:border-gray-500 transition-colors cursor-pointer">
-          name1
-        </span>
-        <span className="bg-gray-800 border border-gray-700 rounded-full px-4 py-1 text-sm text-gray-400 hover:text-white hover:border-gray-500 transition-colors cursor-pointer">
-          name2
-        </span>
-        <span className="bg-gray-800 border border-gray-700 rounded-full px-4 py-1 text-sm text-gray-400 hover:text-white hover:border-gray-500 transition-colors cursor-pointer">
-          name3
-        </span>
-      </div>
     </div>
   );
 }

@@ -17,8 +17,13 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <ToolTile 
             title="Alchemy" 
-            description="Alchemy stuff" 
+            description="Alchemy XP" 
             href="/alchemy" 
+          />
+          <ToolTile
+            title="Dungeons"
+            description="XP and Loot"
+            href="/dungeons"
           />
         </div>
       </div>
