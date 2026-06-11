@@ -22,7 +22,7 @@ export default function Home() {
           />
           <ToolTile
             title="Dungeons"
-            description="XP, Loot and RNG Meter"
+            description="XP, Loot, RNG Meter and stuff"
             href="/dungeons"
           />
         </div>
