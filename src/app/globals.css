@@ -17,15 +17,3 @@
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
 }
-
-html[data-mode="potato-plus"] body {
-  background-color: white !important;
-  color: black !important;
-}
-
-@media (prefers-color-scheme: dark) {
-  html[data-mode="potato-plus"] body {
-    background-color: black !important;
-    color: white !important;
-  }
-}
