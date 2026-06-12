@@ -1,4 +1,5 @@
 import { level200PetLevels, petRarityOffset, standardPetLevels } from "../data/pets";
+import { formatNumber } from "../lib/formatting";
 
 export interface StatItem {
   name: string;
@@ -201,7 +202,7 @@ function getCollectionsByCategory(player: any, profile: any, targetCategory: str
 
     for (const boss of bossMapping) {
       const total = (normalCompletions[boss.floor] || 0) + (masterCompletions[boss.floor] || 0) * 2;
-      results.push(`${boss.name}: ${total.toLocaleString()}`);
+      results.push(`${boss.name}: ${formatNumber(total)}`);
     }
 
     const kuudraTiers = player?.nether_island_player_data?.kuudra_completed_tiers || {};
@@ -233,7 +234,7 @@ function getCollectionsByCategory(player: any, profile: any, targetCategory: str
         }
       }
       
-      results.push(`${col.name}: ${total.toLocaleString()}`);
+      results.push(`${col.name}: ${formatNumber(total)}`);
     }
   }
   return results.length > 0 ? results : ["None"];
@@ -1005,11 +1006,11 @@ export const pvLibrary: Record<string, StatItem> = new Proxy({
 
       const formattedDamage: string[] = [];
 
-      if (highestMageDamage > 0) formattedDamage.push("Mage: " + highestMageDamage.toLocaleString());
-      if (highestArcherDamage > 0) formattedDamage.push("Archer: " + highestArcherDamage.toLocaleString());
-      if (highestHealerDamage > 0) formattedDamage.push("Healer: " + highestHealerDamage.toLocaleString());
-      if (highestTankDamage > 0) formattedDamage.push("Tank: " + highestTankDamage.toLocaleString());
-      if (highestBerserkDamage > 0) formattedDamage.push("Berserk: " + highestBerserkDamage.toLocaleString());
+      if (highestMageDamage > 0) formattedDamage.push("Mage: " + formatNumber(highestMageDamage));
+      if (highestArcherDamage > 0) formattedDamage.push("Archer: " + formatNumber(highestArcherDamage));
+      if (highestHealerDamage > 0) formattedDamage.push("Healer: " + formatNumber(highestHealerDamage));
+      if (highestTankDamage > 0) formattedDamage.push("Tank: " + formatNumber(highestTankDamage));
+      if (highestBerserkDamage > 0) formattedDamage.push("Berserk: " + formatNumber(highestBerserkDamage));
 
       if (formattedDamage.length === 0) return "No Damage Recorded";
       return formattedDamage.join(', ');
@@ -1159,7 +1160,39 @@ export const pvLibrary: Record<string, StatItem> = new Proxy({
     name: "Wardrobe",
     category: "Inventories",
     tags: ["wardrobe", "armor", "storage", "outfits"],
-    getValue: (player: any) => formatInventoryToHTML(player?.inventory?.wardrobe_contents?.data)
+    getValue: (player: any) => {
+      const loadoutArmor = player?.inventory?.loadout?.armor || player?.loadout?.armor;
+      const legacyWardrobe = player?.inventory?.wardrobe_contents?.data || player?.wardrobe_contents?.data;
+
+      // Check for the new API structure first
+      if (loadoutArmor) {
+        const flatItems: any[] = [];
+        const armorPieces = ['HELMET', 'CHESTPLATE', 'LEGGINGS', 'BOOTS'];
+        
+        // Sort the slots (1, 2, 3...) so the UI displays them in the correct order
+        const slots = Object.keys(loadoutArmor).sort((a, b) => Number(a) - Number(b));
+        
+        for (const slot of slots) {
+          for (const piece of armorPieces) {
+            const itemData = loadoutArmor[slot]?.[piece]?.data;
+            if (itemData) {
+              // Because decodeNBT usually returns an array of items, we spread it into flatItems
+              flatItems.push(...(Array.isArray(itemData) ? itemData : [itemData]));
+            }
+          }
+        }
+        
+        return formatInventoryToHTML(flatItems);
+      }
+
+      // Fallback for older profiles using the legacy format
+      if (legacyWardrobe) {
+        return formatInventoryToHTML(legacyWardrobe);
+      }
+
+      // If no wardrobe data exists at all
+      return formatInventoryToHTML([]);
+    }
   },
   talisman_bag: {
     name: "Talisman Bag",

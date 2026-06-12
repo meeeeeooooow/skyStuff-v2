@@ -104,13 +104,38 @@ export async function getPlayerProfile(username: string): Promise<(HypixelProfil
       return { error: 'No SkyBlock profiles found for this player.' };
     }
 
-    const inventoryKeys = ['inv_contents', 'inv_armor', 'equipment_contents', 'talisman_bag', 'ender_chest_contents', 'wardrobe_contents', 'personal_vault_contents', 'potion_bag', 'fishing_bag'];
+    // Removed wardrobe_contents from coreInventories
+    const coreInventories = ['inv_contents', 'inv_armor', 'equipment_contents', 'ender_chest_contents', 'personal_vault_contents'];
+    const bagInventories = ['talisman_bag', 'potion_bag', 'fishing_bag'];
 
     for (const profile of hypixelData.profiles) {
       const player = profile.members?.[mojangUuid];
-      for (const key of inventoryKeys) {
-        if (player?.[key]?.data) {
-          player[key].data = await decodeNBT(player[key].data);
+      
+      // 1. Decode standard inventories
+      for (const key of coreInventories) {
+        if (player?.inventory?.[key]?.data) {
+          player.inventory[key].data = await decodeNBT(player.inventory[key].data);
+        }
+      }
+
+      // 2. Decode bags
+      for (const key of bagInventories) {
+        if (player?.inventory?.bag_contents?.[key]?.data) {
+          player.inventory.bag_contents[key].data = await decodeNBT(player.inventory.bag_contents[key].data);
+        }
+      }
+
+      // 3. Decode the new Wardrobe (Loadout)
+      const loadoutArmor = player?.inventory?.loadout?.armor || player?.loadout?.armor;
+      if (loadoutArmor) {
+        const armorPieces = ['HELMET', 'CHESTPLATE', 'LEGGINGS', 'BOOTS'];
+        
+        for (const slotId in loadoutArmor) {
+          for (const piece of armorPieces) {
+            if (loadoutArmor[slotId]?.[piece]?.data) {
+              loadoutArmor[slotId][piece].data = await decodeNBT(loadoutArmor[slotId][piece].data);
+            }
+          }
         }
       }
     }
