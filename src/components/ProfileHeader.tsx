@@ -4,32 +4,11 @@ import { useState, useEffect, FormEvent, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Loader2 } from "lucide-react";
 import { getPlayerProfile } from "@/lib/hypixel";
+import { useProfile } from "@/context/ProfileContext";
 
-export interface Profile {
-  cute_name: string;
-  selected: boolean;
-  game_mode?: string;
-}
+export default function ProfileHeader() {
+  const { username, profiles, activeProfile, setActiveProfile, activeLayout, allLayouts, setActiveLayout, setIsEditorOpen } = useProfile();
 
-export default function ProfileHeader({ 
-  username, 
-  profiles, 
-  activeProfile, 
-  onProfileSelect,
-  activeLayout,
-  allLayouts,
-  onLayoutSelect,
-  onOpenEditor
-}: { 
-  username: string; 
-  profiles: Profile[];
-  activeProfile: string;
-  onProfileSelect: (profileName: string) => void;
-  activeLayout: string;
-  allLayouts: Record<string, string[]>;
-  onLayoutSelect: (layoutName: string) => void;
-  onOpenEditor: () => void;
-}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState("");
@@ -66,7 +45,7 @@ export default function ProfileHeader({
           inputRef.current?.select();
         }, 0);
       } else {
-        router.push(`/profile/${searchQuery}`);
+          router.push(`/profile/${encodeURIComponent(searchQuery)}`);
       }
     } catch (error) {
       console.error(error);
@@ -83,7 +62,7 @@ export default function ProfileHeader({
           {profiles.map((profile) => (
             <button
               key={profile.cute_name}
-              onClick={() => onProfileSelect(profile.cute_name)}
+              onClick={() => setActiveProfile(profile.cute_name)}
               className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${
                 activeProfile === profile.cute_name
                   ? "bg-orange-500 text-white"
@@ -116,7 +95,7 @@ export default function ProfileHeader({
                 <button
                   key={layoutKey}
                   onClick={() => {
-                    onLayoutSelect(layoutKey);
+                    setActiveLayout(layoutKey);
                     setIsDropdownOpen(false);
                   }}
                   className={`px-4 py-2 text-left text-sm transition-colors ${
@@ -131,7 +110,7 @@ export default function ProfileHeader({
               <hr className="border-gray-700 my-1" />
               <button
                 onClick={() => {
-                  onOpenEditor();
+                  setIsEditorOpen(true);
                   setIsDropdownOpen(false);
                 }}
               className="px-4 py-2 text-left text-sm text-gray-300 font-medium hover:text-white hover:bg-gray-700 transition-colors"

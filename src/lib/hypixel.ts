@@ -1,5 +1,3 @@
-"use server";
-
 import { decodeNBT } from './nbtDecoder';
 
 interface MojangResponse {
@@ -7,9 +5,16 @@ interface MojangResponse {
   name: string;
 }
 
-interface HypixelProfileResponse {
+export interface SkyblockProfile {
+  cute_name: string;
+  selected: boolean;
+  game_mode?: string;
+  members?: Record<string, any>;
+}
+
+export interface HypixelProfileResponse {
   success: boolean;
-  profiles: Record<string, any>[];
+  profiles: SkyblockProfile[];
   cause?: string;
 }
 
@@ -28,7 +33,6 @@ export async function getMayorData(): Promise<HypixelMayorResponse | { success: 
       next: { revalidate: 3600 },
       signal: controller.signal
     });
-    clearTimeout(timeout);
 
     if (!response.ok) {
       return { success: false, error: 'Failed to fetch Mayor data' };
@@ -40,6 +44,8 @@ export async function getMayorData(): Promise<HypixelMayorResponse | { success: 
       return { success: false, error: 'Request timed out while fetching Mayor data.' };
     }
     return { success: false, error: 'Failed to fetch Mayor data' };
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -58,7 +64,6 @@ export async function getPlayerProfile(username: string): Promise<(HypixelProfil
       next: { revalidate: 86400 },
       signal: mojangController.signal
     });
-    clearTimeout(mojangTimeout);
 
     if (!mojangResponse.ok) {
       return { error: 'Minecraft account does not exist.' };
@@ -70,6 +75,8 @@ export async function getPlayerProfile(username: string): Promise<(HypixelProfil
       return { error: 'Request timed out while verifying Minecraft account.' };
     }
     return { error: 'Minecraft account does not exist.' };
+  } finally {
+    clearTimeout(mojangTimeout);
   }
 
   const hypixelController = new AbortController();
@@ -83,7 +90,6 @@ export async function getPlayerProfile(username: string): Promise<(HypixelProfil
       next: { revalidate: 60 },
       signal: hypixelController.signal
     });
-    clearTimeout(hypixelTimeout);
 
     if (hypixelResponse.status === 403) {
       return { error: 'Invalid Hypixel API key.' };
@@ -108,20 +114,30 @@ export async function getPlayerProfile(username: string): Promise<(HypixelProfil
     const coreInventories = ['inv_contents', 'inv_armor', 'equipment_contents', 'ender_chest_contents', 'personal_vault_contents'];
     const bagInventories = ['talisman_bag', 'potion_bag', 'fishing_bag'];
 
+    const decodePromises: Promise<void>[] = [];
+
     for (const profile of hypixelData.profiles) {
       const player = profile.members?.[mojangUuid];
       
       // 1. Decode standard inventories
       for (const key of coreInventories) {
         if (player?.inventory?.[key]?.data) {
-          player.inventory[key].data = await decodeNBT(player.inventory[key].data);
+          decodePromises.push(
+            decodeNBT(player.inventory[key].data).then(decoded => {
+              player.inventory[key].data = decoded;
+            })
+          );
         }
       }
 
       // 2. Decode bags
       for (const key of bagInventories) {
         if (player?.inventory?.bag_contents?.[key]?.data) {
-          player.inventory.bag_contents[key].data = await decodeNBT(player.inventory.bag_contents[key].data);
+          decodePromises.push(
+            decodeNBT(player.inventory.bag_contents[key].data).then(decoded => {
+              player.inventory.bag_contents[key].data = decoded;
+            })
+          );
         }
       }
 
@@ -133,12 +149,18 @@ export async function getPlayerProfile(username: string): Promise<(HypixelProfil
         for (const slotId in loadoutArmor) {
           for (const piece of armorPieces) {
             if (loadoutArmor[slotId]?.[piece]?.data) {
-              loadoutArmor[slotId][piece].data = await decodeNBT(loadoutArmor[slotId][piece].data);
+              decodePromises.push(
+                decodeNBT(loadoutArmor[slotId][piece].data).then(decoded => {
+                  loadoutArmor[slotId][piece].data = decoded;
+                })
+              );
             }
           }
         }
       }
     }
+
+    await Promise.all(decodePromises);
 
     return { ...hypixelData, uuid: mojangUuid };
   } catch (error) {
@@ -146,5 +168,7 @@ export async function getPlayerProfile(username: string): Promise<(HypixelProfil
       return { error: 'Request timed out while fetching Hypixel profile data.' };
     }
     return { error: 'An error occurred while communicating with Hypixel.' };
+  } finally {
+    clearTimeout(hypixelTimeout);
   }
 }

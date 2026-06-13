@@ -2,8 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import { SkinViewer, IdleAnimation } from "skinview3d";
+import { useProfile } from "@/context/ProfileContext";
+import { pvLibrary } from "@/config/pvLibrary";
 
-export default function PlayerModel({ username, level }: { username: string; level: number | string }) {
+export default function PlayerModel() {
+  const { username, currentProfile, playerData } = useProfile();
+  const level = pvLibrary["skyblock_level"]?.getValue(playerData, currentProfile) || 0;
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

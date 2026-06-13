@@ -12,6 +12,7 @@
     "@lucide/lab": "^0.1.2",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
+    "dompurify": "^3.4.10",
     "lucide-react": "^1.14.0",
     "next": "^16.2.6",
     "prismarine-nbt": "^2.8.0",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/dompurify": "^3.0.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
